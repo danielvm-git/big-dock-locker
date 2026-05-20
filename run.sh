@@ -6,8 +6,21 @@ swift build
 
 BINARY_PATH=$(find .build -name DockLock -type f -perm +111 | grep "debug/DockLock")
 
-echo "Ad-hoc signing binary at $BINARY_PATH..."
-codesign -s - -f --entitlements Entitlements.plist "$BINARY_PATH"
+# Create a stable .app wrapper in the current directory
+APP_NAME="DockLock.app"
+echo "Packaging $APP_NAME..."
+mkdir -p "$APP_NAME/Contents/MacOS"
+cp "$BINARY_PATH" "$APP_NAME/Contents/MacOS/DockLock"
+cp Info.plist "$APP_NAME/Contents/Info.plist"
 
-echo "Launching DockLock..."
-"$BINARY_PATH"
+echo "Signing $APP_NAME..."
+codesign -s - -f --entitlements Entitlements.plist "$APP_NAME"
+
+echo "DockLock.app is ready."
+echo "--------------------------------------------------------"
+echo "1. Drag the 'DockLock.app' from this folder into Settings > Accessibility."
+echo "2. If it's already there, remove it and add this one."
+echo "3. Launching the app now..."
+echo "--------------------------------------------------------"
+
+open "$APP_NAME"

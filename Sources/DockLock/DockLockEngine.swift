@@ -37,7 +37,10 @@ public class DockLockEngine {
         )
         
         guard let tap = eventTap else {
-            throw NSError(domain: "DockLockEngine", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to create event tap. Accessibility permissions required."])
+            let granted = PermissionManager.isAccessibilityGranted()
+            let message = "Failed to create event tap. Accessibility: \(granted ? "TRUSTED" : "NOT TRUSTED")."
+            print(message)
+            throw NSError(domain: "DockLockEngine", code: 1, userInfo: [NSLocalizedDescriptionKey: message])
         }
         
         runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, tap, 0)
