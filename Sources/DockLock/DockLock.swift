@@ -1,31 +1,78 @@
-// The Swift Programming Language
-// https://docs.swift.org/swift-book
-
-import Foundation
+import SwiftUI
+import AppKit
 
 @main
-struct DockLock {
-    static func main() {
-        let arguments = CommandLine.arguments
-        
-        if arguments.contains("--list-displays") {
-            listDisplays()
-            return
+struct DockLockApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
+    var body: some Scene {
+        Settings {
+            EmptyView()
         }
+    }
+}
+
+@MainActor
+class AppDelegate: NSObject, NSApplicationDelegate {
+    var menuBarController: MenuBarController?
+    
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        // Hide dock icon if we want it to be a pure menu bar app
+        NSApp.setActivationPolicy(.accessory)
         
-        print("DockLock is running. Use --list-displays to see connected monitors.")
+        menuBarController = MenuBarController()
+    }
+}
+
+@MainActor
+class MenuBarController: NSObject {
+    private var statusItem: NSStatusItem?
+    private var dashboardWindow: NSWindow?
+    private let viewModel = DockLockViewModel()
+    
+    override init() {
+        super.init()
+        setupStatusItem()
     }
     
-    static func listDisplays() {
-        let manager = DisplayManager()
-        do {
-            let displays = try manager.getAllDisplays()
-            print("Found \(displays.count) display(s):")
-            for display in displays {
-                print("- [\(display.id)] \(display.name) \(display.isMain ? "(Main)" : "")")
-            }
-        } catch {
-            print("Error fetching displays: \(error)")
+    private func setupStatusItem() {
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        
+        if let button = statusItem?.button {
+            button.image = NSImage(systemSymbolName: "lock.display", accessibilityDescription: "DockLock")
         }
+        
+        let menu = NSMenu()
+        menu.addItem(NSMenuItem(title: "Dashboard", action: #selector(showDashboard), keyEquivalent: "d"))
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: "Quit", action: #selector(quit), keyEquivalent: "q"))
+        
+        // Ensure menu targets this controller
+        menu.items.forEach { $0.target = self }
+        
+        statusItem?.menu = menu
+    }
+    
+    @objc func showDashboard() {
+        if dashboardWindow == nil {
+            let contentView = DashboardView(viewModel: viewModel)
+            let window = NSWindow(
+                contentRect: NSRect(x: 0, y: 0, width: 400, height: 300),
+                styleMask: [.titled, .closable, .fullSizeContentView],
+                backing: .buffered, defer: false)
+            window.center()
+            window.setFrameAutosaveName("Dashboard")
+            window.contentView = NSHostingView(rootView: contentView)
+            window.isReleasedWhenClosed = false
+            window.title = "DockLock Dashboard"
+            dashboardWindow = window
+        }
+        
+        dashboardWindow?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+    
+    @objc func quit() {
+        NSApp.terminate(nil)
     }
 }
