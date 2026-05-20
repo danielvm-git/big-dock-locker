@@ -8,7 +8,16 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "DockLock"),
+            name: "DockLock",
+            linkerSettings: [
+                .unsafeFlags([
+                    "-Xlinker", "-sectcreate",
+                    "-Xlinker", "__TEXT",
+                    "-Xlinker", "__info_plist",
+                    "-Xlinker", "Info.plist"
+                ])
+            ]
+        ),
         .testTarget(
             name: "DockLockTests",
             dependencies: ["DockLock"]

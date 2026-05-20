@@ -77,4 +77,8 @@ public class DockLockViewModel: ObservableObject {
     public func requestPermissions() {
         PermissionManager.requestAccessibility()
     }
+    
+    public func openSettings() {
+        PermissionManager.openAccessibilitySettings()
+    }
 }
