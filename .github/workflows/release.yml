@@ -25,28 +25,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build and Package
-        run: |
-          # Build the Swift package
-          swift build -c release
-          
-          # Find the binary
-          BINARY_PATH=$(find .build -name DockLock -type f -perm +111 | grep "release/DockLock")
-          
-          # Create .app bundle
-          mkdir -p DockLock.app/Contents/MacOS
-          mkdir -p DockLock.app/Contents/Resources
-          cp "$BINARY_PATH" DockLock.app/Contents/MacOS/DockLock
-          cp Info.plist DockLock.app/Contents/Info.plist
-          cp AppIcon.icns DockLock.app/Contents/Resources/AppIcon.icns
-          
-          # Sign the app (Ad-hoc signing in CI)
-          codesign -s - -f --entitlements Entitlements.plist DockLock.app
-          
-          # Create DMG Installer
-          npx create-dmg DockLock.app || true
-          mv DockLock*.dmg DockLock.dmg
-
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

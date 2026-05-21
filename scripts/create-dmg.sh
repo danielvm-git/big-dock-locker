@@ -6,7 +6,13 @@ DMG_NAME="DockLock.dmg"
 
 # Ensure the app exists
 if [ ! -d "$APP_NAME" ]; then
-    echo "Error: $APP_NAME not found. Please run ./run.sh first."
+    echo "Error: $APP_NAME not found. Please run ./scripts/build-app.sh first."
+    exit 1
+fi
+
+# Ensure Info.plist exists inside the app
+if [ ! -f "$APP_NAME/Contents/Info.plist" ]; then
+    echo "Error: $APP_NAME/Contents/Info.plist not found. App bundle is incomplete."
     exit 1
 fi
 
@@ -18,9 +24,17 @@ if [ -f "$DMG_NAME" ]; then
 fi
 
 # Use the create-dmg npm package to generate the disk image
-npx create-dmg "$APP_NAME" || true
+# We skip code signing for the DMG itself as we ad-hoc sign the .app
+npx create-dmg "$APP_NAME" --no-code-sign
 
 # The tool often appends version/arch to the name, so let's normalize it back
-mv DockLock*.dmg "$DMG_NAME"
+# We use a more specific glob to avoid errors if multiple DMGs exist
+NEW_DMG=$(ls DockLock*.dmg | head -n 1)
+if [ -n "$NEW_DMG" ]; then
+    mv "$NEW_DMG" "$DMG_NAME"
+else
+    echo "Error: DMG file was not created."
+    exit 1
+fi
 
 echo "Done! $DMG_NAME is ready."

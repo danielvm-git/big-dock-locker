@@ -112,6 +112,35 @@ Priority: P1 | Value: High | Effort: M | WSJF: 6.5
   - [x] Implement `create-dmg` script to generate a branded Disk Image → verify: `./scripts/create-dmg.sh`
   - [x] Configure GitHub Actions to attach `.dmg` instead of `.zip` to releases → verify: Check GitHub Release assets
 
+### Story 5.2: Fix Release Versioning and Distribution (v1.3.1)
+Status: [ ] In Progress
+
+Acceptance Criteria:
+  Feature: Reliable Automated Release
+    Scenario: Release process updates all version strings and packages a working DMG
+      Given a new release is triggered
+      When semantic-release runs
+      Then README.md and Info.plist reflect the NEW version
+      And the binary inside the DMG reflects the NEW version
+      And the DMG is valid and opens correctly
+
+**Context**: This story fixes the regression where distributed apps showed old versions and DMGs were sometimes corrupted. It unifies versioning across README and Info.plist and ensures the build happens *after* the version bump in CI.
+
+## Steps
+1. Update `scripts/update-version.sh` to sync version in `README.md` → verify: `./scripts/update-version.sh 9.9.9 && grep "9.9.9" README.md && git checkout README.md Info.plist`
+2. Create `scripts/build-app.sh` to centralize build, package, and ad-hoc sign logic → verify: `./scripts/build-app.sh && ls -d DockLock.app`
+3. Update `.releaserc.json` to include `README.md` in git assets and move build to `prepareCmd` → verify: `grep "README.md" .releaserc.json`
+4. Update `.github/workflows/release.yml` to remove early build and rely on `semantic-release` for packaging → verify: Check `release.yml` for simplified steps
+5. Update `scripts/create-dmg.sh` to be more robust (no `|| true`, explicit checks) → verify: `./scripts/create-dmg.sh` locally
+
+## Out of scope
+- Notarization (requires Apple Developer Program membership).
+- Auto-update mechanism (Sparkle).
+
+## Risks
+- CI environment differences: `create-dmg` might behave differently on `macos-latest`.
+- Regex failures: If `README.md` format changes, `update-version.sh` might fail to find the string.
+
 ---
 
 ## Future Roadmap (V2: Advanced UX & Feedback)
