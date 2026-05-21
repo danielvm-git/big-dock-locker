@@ -35,12 +35,8 @@
 
 ## 📸 Screenshots
 
-*(Replace the placeholder images below with actual screenshots of your app)*
-
 <p align="center">
-  <img src="https://via.placeholder.com/600x400?text=Dashboard+UI" alt="DockLock Dashboard" width="45%">
-  &nbsp; &nbsp;
-  <img src="https://via.placeholder.com/300x400?text=Menu+Bar+Item" alt="Menu Bar Icon" width="22%">
+  <img src="Assets/dashboard.png" alt="DockLock Dashboard" width="60%">
 </p>
 
 ---
@@ -59,7 +55,7 @@ Before you begin, ensure you have met the following requirements:
 Clone the repository and run the setup script to build and package the `.app` bundle:
 
 ```bash
-git clone https://github.com/[your-username]/docklock.git
+git clone https://github.com/danielvm-git/docklock.git
 cd docklock
 ./run.sh
 ```
