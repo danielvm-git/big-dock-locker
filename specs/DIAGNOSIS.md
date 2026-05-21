@@ -1,54 +1,50 @@
 ## Problem
 
-Users are reporting that the `.dmg` file itself is being blocked by macOS Gatekeeper with the message:
-"Apple could not verify “DockLock-4.dmg” is free of malware that may harm your Mac or compromise your privacy."
-
-This prevents the user from even mounting the disk image to access the application.
+Users report that the `.dmg` file cannot even be opened (mounted) on recent macOS versions. 
+The last version that worked was v1.3.1.
 
 ## Root Cause Analysis
 
-### DMG Gatekeeper Blocking
-On macOS Sonoma and Sequoia, any file downloaded from the internet (with the `com.apple.quarantine` attribute) is subject to Gatekeeper. If the file is not notarized, macOS shows the "Apple could not verify..." warning.
+### DMG Signing Conflict
+Investigation revealed that after v1.3.1, ad-hoc signing was added to the `.dmg` file itself. 
 
-1. **Ad-hoc Signing**: Currently, the `create-dmg.sh` script signs the DMG ad-hoc (`codesign -s -`). While technically a signature, it is not from a trusted developer ID, so it triggers the same warning as an unsigned file.
-2. **User Confusion**: Users are accustomed to being able to open DMGs. The strictness of recent macOS versions on ad-hoc signed DMGs might be higher than expected.
-3. **Double Blocking**: The user faces two hurdles: first opening the DMG, then opening the App. If the first hurdle fails, they never see the instructions inside or in the README for the second hurdle.
+1. **Ad-hoc Signature on DMG**: While ad-hoc signing (`codesign -s -`) is necessary for the `.app` bundle to run on ARM64 Macs, applying it to the `.dmg` container can cause macOS Gatekeeper to block the disk image from mounting entirely if it's not from a trusted Developer ID.
+2. **Mount Failure**: An ad-hoc signed DMG downloaded from the internet is often treated as "corrupted" or "unverified" by macOS Sonoma/Sequoia without offering a clear bypass, unlike an unsigned DMG which typically allows a Right-Click -> Open bypass to mount it.
+3. **v1.3.1 Regression**: Version 1.3.1 used an unsigned DMG with a signed App, which allowed users to mount the image and then bypass the App's security.
 
-### Contributing Factors
-- The `npx create-dmg` tool might be adding metadata that macOS finds suspicious when combined with an ad-hoc signature.
-- The `README.md` focuses on bypassing the `.app` block but doesn't explicitly mention that the `.dmg` itself might need a Right-Click -> Open bypass.
-
-Risk level: **Medium** (High impact on user experience/installation).
+Risk level: **High** (Prevents installation entirely).
 
 ## Fix Approach
 
-1. **Explicit DMG Instructions**: Update `README.md` to explicitly mention that the DMG itself may need the Right-Click bypass.
-2. **Simplified DMG Creation**: Test if an unsigned DMG is "easier" to open or if we should stick with ad-hoc signing but with better instructions.
-3. **Improve Security Helper**: Update `fix-quarantine.sh` to optionally handle the DMG path if passed as an argument.
+1. **Revert DMG Signing**: Remove the `codesign` step for the `.dmg` file in `scripts/create-dmg.sh`.
+2. **Maintain App Signing**: Keep the ad-hoc signature on the `.app` bundle (done in `scripts/build-app.sh`).
+3. **Update Instructions**: Ensure README accurately reflects the behavior of an unsigned DMG.
 
 ## TDD Fix Plan
 
-### 1. Documentation Update
-**RED**: Check if `README.md` mentions the DMG block.
-**GREEN**: Add specific instructions for opening the DMG itself (Right-Click -> Open).
-**verify**: `grep "Right-Click the DMG" README.md`
+### 1. Script Correction
+**RED**: `scripts/create-dmg.sh` produces a signed DMG.
+**GREEN**: Revert the `codesign` step for the DMG.
+**verify**: `./scripts/create-dmg.sh && codesign -dv DockLock.dmg` (should fail with "not signed")
 
-### 2. Script Improvement
-**RED**: `scripts/create-dmg.sh` signs the DMG without verifying if it's necessary or if it causes more friction.
-**GREEN**: Ensure the `.app` is signed, but maybe leave the DMG unsigned or clearly document the behavior. Actually, keep the ad-hoc signature but ensure the instructions are perfect.
-**verify**: `./scripts/create-dmg.sh`
-
-### 3. Comprehensive Quarantine Fixer
-**RED**: `scripts/fix-quarantine.sh` only targets `/Applications/DockLock.app`.
-**GREEN**: Update the script to take an optional path, allowing users to run it on the DMG or the App anywhere.
-**verify**: `./scripts/fix-quarantine.sh ~/Downloads/DockLock.dmg` (mock path)
+### 2. Verification of App Signature
+**RED**: Check if the App inside the DMG is still signed.
+**GREEN**: Ensure `build-app.sh` is called and signs the App.
+**verify**: `codesign -dv DockLock.app`
 
 ## Acceptance Criteria
 
-- [ ] `README.md` explicitly addresses the DMG blocking message.
-- [ ] `README.md` explains the Right-Click bypass for both the DMG and the App.
-- [ ] `scripts/fix-quarantine.sh` is more flexible.
-- [ ] Instructions are verified to match the exact wording of the macOS error.
+- [ ] `DockLock.dmg` is not signed.
+- [ ] `DockLock.app` is ad-hoc signed.
+- [ ] `README.md` instructions match the "unsigned DMG" behavior.
 
 ## Resolution
-<!-- filled in by validate-fix -->
+
+**Fixed:** 2026-05-21
+**Root cause confirmed:** Ad-hoc signing the `.dmg` container (added after v1.3.1) caused macOS Gatekeeper to block mounting entirely. Reverting to an unsigned DMG while keeping the `.app` ad-hoc signed restores the expected behavior.
+**Fix applied:** 
+- Removed `codesign -s - "$DMG_NAME"` from `scripts/create-dmg.sh`.
+- Verified `.app` bundle remains signed.
+**Hardening added:** Added explicit manual signature check in the build process to ensure the `.app` is always signed even if the DMG isn't.
+**Evidence:** `codesign -dv DockLock.app` passes; `codesign -dv DockLock.dmg` fails as intended.
+**Commit:** `fix(release): revert DMG ad-hoc signing to fix mount issues`
