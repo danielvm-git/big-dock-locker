@@ -98,12 +98,27 @@ MacOS requires **Accessibility Permissions** to allow DockLock to monitor mouse 
 ## 🛠 Troubleshooting
 
 ### "DockLock" cannot be opened because it is from an unidentified developer
-Because this is an open-source project and the pre-built binaries are ad-hoc signed, macOS might block the first launch.
+Because this is an open-source project and the pre-built binaries are ad-hoc signed, macOS might block the first launch with a warning like: 
+> **"Apple could not verify “DockLock” is free of malware..."**
 
-1.  Open the **Applications** folder.
-2.  **Right-click** (or Control-click) the **DockLock** app and select **Open**.
-3.  In the dialog that appears, click **Open** again.
-4.  You will only need to do this once.
+#### 🛡️ The 3-Step Security Bypass
+1.  **Move to Applications:** Drag `DockLock` from the DMG to your **Applications** folder. **Do not run it directly from the DMG.**
+2.  **Right-Click Open:** In the Applications folder, **Right-click** (or Control-click) the **DockLock** icon and select **Open**.
+3.  **Confirm:** In the scary-looking dialog that appears, you will now see an **Open** button (which is missing if you just double-click). Click **Open**.
+
+You will only need to do this once.
+
+#### 💻 Power User Fix (Terminal)
+If the right-click method fails, you can manually remove the "quarantine" flag that macOS attaches to downloaded files:
+```bash
+xattr -d com.apple.quarantine /Applications/DockLock.app
+```
+
+Alternatively, you can run the included helper script from the source:
+```bash
+./scripts/fix-quarantine.sh
+```
+
 
 ---
 

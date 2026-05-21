@@ -24,11 +24,9 @@ if [ -f "$DMG_NAME" ]; then
 fi
 
 # Use the create-dmg npm package to generate the disk image
-# We skip code signing for the DMG itself as we ad-hoc sign the .app
 npx create-dmg "$APP_NAME" --no-code-sign
 
 # The tool often appends version/arch to the name, so let's normalize it back
-# We use a more specific glob to avoid errors if multiple DMGs exist
 NEW_DMG=$(ls DockLock*.dmg | head -n 1)
 if [ -n "$NEW_DMG" ]; then
     mv "$NEW_DMG" "$DMG_NAME"
@@ -36,5 +34,9 @@ else
     echo "Error: DMG file was not created."
     exit 1
 fi
+
+# Manually sign the DMG ad-hoc
+echo "Signing $DMG_NAME..."
+codesign -s - "$DMG_NAME"
 
 echo "Done! $DMG_NAME is ready."
