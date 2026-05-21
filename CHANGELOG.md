@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/danielvm-git/docklock/compare/v1.3.0...v1.3.1) (2026-05-21)
+
+
+### Bug Fixes
+
+* **release:** build app after version bump and sync README ([#1](https://github.com/danielvm-git/docklock/issues/1)) ([7cc4adb](https://github.com/danielvm-git/docklock/commit/7cc4adbd2a4936f5a4ebfdb46b6abedddeadb3b8))
+
 # [1.3.0](https://github.com/danielvm-git/docklock/compare/v1.2.0...v1.3.0) (2026-05-21)
 
 
