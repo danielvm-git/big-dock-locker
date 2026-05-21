@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/danielvm-git/docklock/compare/v1.3.1...v1.3.2) (2026-05-21)
+
+
+### Bug Fixes
+
+* **docs:** trigger release for Gatekeeper instructions ([3c90c29](https://github.com/danielvm-git/docklock/commit/3c90c2961b76e1d83d7c7ec23a33a6c4ca0ea110))
+
 ## [1.3.1](https://github.com/danielvm-git/docklock/compare/v1.3.0...v1.3.1) (2026-05-21)
 
 
