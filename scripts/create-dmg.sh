@@ -24,7 +24,8 @@ if [ -f "$DMG_NAME" ]; then
 fi
 
 # Use the create-dmg npm package to generate the disk image
-npx create-dmg "$APP_NAME" --no-code-sign
+# We use --identity=- to explicitly sign the DMG ad-hoc
+npx create-dmg "$APP_NAME" --overwrite --identity=-
 
 # The tool often appends version/arch to the name, so let's normalize it back
 NEW_DMG=$(ls DockLock*.dmg | head -n 1)
@@ -35,8 +36,4 @@ else
     exit 1
 fi
 
-# Manually sign the DMG ad-hoc
-echo "Signing $DMG_NAME..."
-codesign -s - "$DMG_NAME"
-
-echo "Done! $DMG_NAME is ready."
+echo "Done! $DMG_NAME is ready and ad-hoc signed."
