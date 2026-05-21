@@ -1,22 +1,31 @@
+# DockLock
+
 <p align="left">
   <img src="Assets/AppIcon.png" alt="DockLock Logo" width="128">
 </p>
-# DockLock
+
+**DockLock** is a lightweight macOS utility designed to solve a long-standing frustration for multi-monitor users: the "jumping Dock." It allows you to pin the macOS Dock to a specific display and prevents it from moving to other screens, even when performing bottom-edge gestures.
+
+**v1.3.5 Signature Edition** features a refined visual theme and professional identity.
 
 [![Swift Version](https://img.shields.io/badge/Swift-6.0-F05138.svg)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platforms-macOS_14+-lightgrey.svg)](https://developer.apple.com/macos/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-**DockLock** is a lightweight macOS utility designed to solve a long-standing frustration for multi-monitor users: the "jumping Dock." It allows you to pin the macOS Dock to a specific display and prevents it from moving to other screens, even when performing bottom-edge gestures.
+---
 
-**v1.3.5 Signature Edition** features a refined visual theme and professional identity.
+## 📸 Screenshots
+
+<p align="center">
+  <img src="Assets/dashboard.png" alt="DockLock Dashboard" width="60%">
+</p>
 
 ---
 
 ## 📋 Table of Contents
-- [Features](#-features)
 - [Screenshots](#-screenshots)
+- [Features](#-features)
 - [Prerequisites](#-prerequisites)
 - [Installation](#-installation)
 - [Usage](#-usage)
@@ -45,14 +54,6 @@ You can download the latest pre-built version of **DockLock** from the [Releases
 - **Menu Bar Integration:** Runs as a resident utility in the system tray.
 - **Launch at Login:** Option to start automatically when you log into your Mac.
 - **Automated Releases:** Continuous delivery via `semantic-release` and GitHub Actions.
-
----
-
-## 📸 Screenshots
-
-<p align="center">
-  <img src="Assets/dashboard.png" alt="DockLock Dashboard" width="60%">
-</p>
 
 ---
 
