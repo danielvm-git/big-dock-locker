@@ -11,8 +11,11 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0.0</string>
 	<key>CFBundleVersion</key>
-	<string>1.0.0</string>
+	<string>1</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon.icns</string>
 	<key>NSAccessibilityUsageDescription</key>
+
 	<string>DockLock needs accessibility permissions to prevent the Dock from jumping between monitors.</string>
 </dict>
 </plist>

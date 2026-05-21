@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>fixed-dock · System design + prototype</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #f0eee9; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif; }
+  body { overscroll-behavior: none; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="tokens.jsx"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="diagrams.jsx"></script>
+<script type="text/babel" src="dashboard.jsx"></script>
+<script type="text/babel" src="onboarding.jsx"></script>
+
+<script type="text/babel">
+  function App() {
+    return (
+      <DesignCanvas>
+        <DCSection id="overview" title="Overview" subtitle="The problem fixed-dock solves, in one frame">
+          <DCArtboard id="problem" label="Problem & Solution" width={1100} height={720}>
+            <OverviewArtboard />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="architecture" title="System Architecture" subtitle="Four layers in one signed app bundle">
+          <DCArtboard id="layers" label="Layered architecture" width={1100} height={820}>
+            <ArchitectureArtboard />
+          </DCArtboard>
+          <DCArtboard id="state-machine" label="Engine state machine" width={1100} height={620}>
+            <StateMachineArtboard />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="flow" title="Core Engine Flow" subtitle="How a cursor event becomes a no-op">
+          <DCArtboard id="sequence" label="Event interception sequence" width={1100} height={700}>
+            <EngineFlowArtboard />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="dashboard" title="Dashboard · Interactive Prototype" subtitle="SwiftUI app · click around to explore">
+          <DCArtboard id="status" label="A · Status (locked)" width={920} height={620}>
+            <Dashboard initialEnabled={true} initialAnchor={0} initialView="status"/>
+          </DCArtboard>
+          <DCArtboard id="displays" label="B · Displays" width={920} height={620}>
+            <Dashboard initialEnabled={true} initialAnchor={0} initialView="displays"/>
+          </DCArtboard>
+          <DCArtboard id="behavior" label="C · Behavior" width={920} height={620}>
+            <Dashboard initialEnabled={true} initialAnchor={0} initialView="behavior"/>
+          </DCArtboard>
+          <DCArtboard id="activity" label="D · Activity" width={920} height={620}>
+            <Dashboard initialEnabled={true} initialAnchor={0} initialView="activity"/>
+          </DCArtboard>
+          <DCArtboard id="perms" label="E · Permissions" width={920} height={620}>
+            <Dashboard initialEnabled={false} initialAnchor={0} initialView="perms"/>
+          </DCArtboard>
+          <DCArtboard id="about" label="F · About" width={920} height={620}>
+            <Dashboard initialEnabled={true} initialAnchor={0} initialView="about"/>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="onboarding" title="Onboarding Flow" subtitle="Three-step first run">
+          <DCArtboard id="welcome" label="1 · Welcome" width={640} height={480}>
+            <OnboardingWelcome/>
+          </DCArtboard>
+          <DCArtboard id="permission" label="2 · Permission" width={640} height={480}>
+            <OnboardingPermission/>
+          </DCArtboard>
+          <DCArtboard id="anchor" label="3 · Choose anchor" width={640} height={480}>
+            <OnboardingAnchor/>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="menubar" title="Menu Bar" subtitle="Quick access dropdown · always one click away">
+          <DCArtboard id="mb-locked" label="Locked" width={640} height={400}>
+            <MenuBarArtboard state="locked"/>
+          </DCArtboard>
+          <DCArtboard id="mb-paused" label="Paused" width={640} height={400}>
+            <MenuBarArtboard state="paused"/>
+          </DCArtboard>
+          <DCArtboard id="mb-idle" label="Disabled" width={640} height={400}>
+            <MenuBarArtboard state="idle"/>
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

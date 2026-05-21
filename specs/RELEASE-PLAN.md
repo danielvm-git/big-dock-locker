@@ -97,45 +97,34 @@ Acceptance Criteria:
 - App Sandbox: If the app is sandboxed, some display info might be limited (but we are currently not sandboxed).
 - UI Blocking: Ensure the `CGEventTap` doesn't block the main thread.
 
-## Epic 3: Persistence & Automation
-Priority: P2 | Value: Med | Effort: S | WSJF: 5.5
+## Epic 4: Visual Polish & Identity (v1.1)
+Priority: P1 | Value: High | Effort: S | WSJF: 7.0
 
-### Story 3.1: As a user, I want my locked monitor preference to be saved.
+### Story 4.1: As a user, I want the app to have a consistent visual theme.
 Status: [ ] Not started
+Tasks:
+  - [ ] Apply "Paper & Ink" color tokens to DashboardView → verify: `swift build`
+  - [ ] Implement branding (Sodalite Blue accents) across all UI elements → verify: `swift run`
 
-Acceptance Criteria:
-  Feature: Settings Persistence
-    Scenario: Locked monitor choice persists after restart
-      Given I have locked the Dock to Monitor A
-      When I restart the app
-      Then the Dock remains locked to Monitor A
-
-**Context**: This story ensures the user's configuration is saved. We'll use `UserDefaults` to store the ID of the locked monitor so the app can automatically resume its state on launch.
-
-## Steps
-1. Create `SettingsManager` class to handle `UserDefaults` operations → verify: `swift test --filter SettingsManagerTests`
-2. Integrate `SettingsManager` into `DockLockViewModel` to load state on init and save on change → verify: `swift build`
-
-### Story 3.2: As a user, I want DockLock to start at login.
+### Story 4.2: As a user, I want the app to have a professional icon.
 Status: [ ] Not started
+Tasks:
+  - [ ] Generate `AppIcon.icns` based on system design logo → verify: Check bundle resources
+  - [ ] Update `run.sh` to embed the icon in the `.app` bundle → verify: Icon appears in Finder/Dock
 
-Acceptance Criteria:
-  Feature: Start at Login
-    Scenario: Enable start at login
-      Given the 'Start at Login' setting is enabled
-      When the system reboots
-      Then DockLock launches automatically
+---
 
-**Context**: For a system utility like this, starting at login is essential. We'll implement this using `SMAppService` for modern macOS versions.
+## Future Roadmap (V2: Advanced UX & Feedback)
 
-## Steps
-1. Implement `LoginItemManager` using `SMAppService` to register the main app as a login item → verify: `swift build`
-2. Add "Launch at Login" toggle to `DashboardView` and bind it to `LoginItemManager` → verify: `swift run` and check toggle functionality
+### Epic 5: Smart Onboarding & Permissions
+- **Story 5.1:** Interactive Onboarding Wizard (Welcome -> Permission -> Choose Anchor).
+- **Story 5.2:** Haptic Feedback on intercept (subtle tap on Force Touch trackpads).
 
-## Out of scope
-- iCloud sync for settings.
-- Complex login item management (e.g. helper apps).
+### Epic 6: Deep Analytics & Activity
+- **Story 6.1:** Prevention Counter (track total "Dock jumps" blocked by the engine).
+- **Story 6.2:** Activity Log (Live event stream showing topology changes and intercepts).
+- **Story 6.3:** Pause Timer (Quick-pause for 30s/1m via Menu Bar/Dashboard).
 
-## Risks
-- SMAppService availability: Requires macOS 13+. We are targeting macOS 14, so it should be fine.
-- Sandbox constraints: If enabled, login items require specific entitlements.
+### Epic 7: Sidebar Navigation
+- **Story 7.1:** Full macOS Sidebar layout as seen in System Design.
+- **Story 7.2:** Categorized views (Status, Displays, Behavior, Activity, About).

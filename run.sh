@@ -10,8 +10,10 @@ BINARY_PATH=$(find .build -name DockLock -type f -perm +111 | grep "debug/DockLo
 APP_NAME="DockLock.app"
 echo "Packaging $APP_NAME..."
 mkdir -p "$APP_NAME/Contents/MacOS"
+mkdir -p "$APP_NAME/Contents/Resources"
 cp "$BINARY_PATH" "$APP_NAME/Contents/MacOS/DockLock"
 cp Info.plist "$APP_NAME/Contents/Info.plist"
+cp AppIcon.icns "$APP_NAME/Contents/Resources/AppIcon.icns"
 
 echo "Signing $APP_NAME..."
 codesign -s - -f --entitlements Entitlements.plist "$APP_NAME"
