@@ -11,7 +11,12 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 APP_NAME="DockLock-$ARCH.app"
-DMG_NAME="DockLock-$ARCH.dmg"
+if [ "$ARCH" == "arm64" ]; then
+    DMG_LABEL="apple-silicon-mac"
+else
+    DMG_LABEL="intel-mac"
+fi
+DMG_NAME="DockLock-$DMG_LABEL.dmg"
 
 # Ensure the app exists
 if [ ! -d "$APP_NAME" ]; then

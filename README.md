@@ -53,8 +53,8 @@ Follow these three steps to get **DockLock** running on your Mac.
 
 ### 1. Download & Install
 1.  Go to the [Releases](https://github.com/danielvm-git/docklock/releases) page and download the installer for your Mac type:
-    *   **Apple Silicon (M1/M2/M3):** Download `DockLock-arm64.dmg`.
-    *   **Intel Mac:** Download `DockLock-x86_64.dmg`.
+    *   **Apple Silicon (M1/M2/M3):** Download `DockLock-apple-silicon-mac.dmg`.
+    *   **Intel Mac:** Download `DockLock-intel-mac.dmg`.
 2.  Open the `.dmg` file and drag the **DockLock** icon into your **Applications** folder.
 
 ### 2. Allow the App (Security & Privacy)

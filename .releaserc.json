@@ -21,8 +21,8 @@
       "@semantic-release/github",
       {
         "assets": [
-          {"path": "DockLock-arm64.dmg", "label": "DockLock Installer (Apple Silicon) v${nextRelease.version}"},
-          {"path": "DockLock-x86_64.dmg", "label": "DockLock Installer (Intel) v${nextRelease.version}"}
+          {"path": "DockLock-apple-silicon-mac.dmg", "label": "DockLock Installer (Apple Silicon) v${nextRelease.version}"},
+          {"path": "DockLock-intel-mac.dmg", "label": "DockLock Installer (Intel) v${nextRelease.version}"}
         ]
       }
     ]
