@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/danielvm-git/docklock/compare/v1.0.0...v1.1.0) (2026-05-21)
+
+
+### Features
+
+* v1.1 Signature Edition - Refined theme and professional App Icon ([73f85ff](https://github.com/danielvm-git/docklock/commit/73f85ffedbb324870ec49485f1768e648141fd46))
+
 # 1.0.0 (2026-05-21)
 
 
