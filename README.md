@@ -42,7 +42,7 @@
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="Assets/dashboard.png" alt="Big DockLocker Dashboard" width="60%">
+  <img src="Assets/dashboard.png?v=2" alt="Big DockLocker Dashboard" width="60%">
 </p>
 
 ---
