@@ -35,8 +35,10 @@ jobs:
           
           # Create .app bundle
           mkdir -p DockLock.app/Contents/MacOS
+          mkdir -p DockLock.app/Contents/Resources
           cp "$BINARY_PATH" DockLock.app/Contents/MacOS/DockLock
           cp Info.plist DockLock.app/Contents/Info.plist
+          cp AppIcon.icns DockLock.app/Contents/Resources/AppIcon.icns
           
           # Sign the app (Ad-hoc signing in CI)
           codesign -s - -f --entitlements Entitlements.plist DockLock.app
