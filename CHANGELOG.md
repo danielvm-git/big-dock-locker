@@ -1,3 +1,10 @@
+## [1.3.5](https://github.com/danielvm-git/docklock/compare/v1.3.4...v1.3.5) (2026-05-21)
+
+
+### Bug Fixes
+
+* **release:** modernize signing and remove suspicious entitlements ([#5](https://github.com/danielvm-git/docklock/issues/5)) ([31fcba7](https://github.com/danielvm-git/docklock/commit/31fcba798ac65aa40a9218ead9e2f2c16c929dac))
+
 ## [1.3.4](https://github.com/danielvm-git/docklock/compare/v1.3.3...v1.3.4) (2026-05-21)
 
 
