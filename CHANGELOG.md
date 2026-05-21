@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/danielvm-git/docklock/compare/v1.4.0...v1.5.0) (2026-05-21)
+
+
+### Features
+
+* rename application from DockLock to Big DockLocker ([95d053b](https://github.com/danielvm-git/docklock/commit/95d053bd91f43003d657583102211a1c90b136da))
+
 # [1.4.0](https://github.com/danielvm-git/docklock/compare/v1.3.5...v1.4.0) (2026-05-21)
 
 
