@@ -23,7 +23,14 @@ struct DashboardView: View {
     }
     
     private var header: some View {
-        HStack {
+        HStack(alignment: .center, spacing: 12) {
+            if let nsImage = NSImage(named: "AppIcon") {
+                Image(nsImage: nsImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 44, height: 44)
+            }
+            
             VStack(alignment: .leading, spacing: 4) {
                 Text("DockLock")
                     .font(.system(size: 22, weight: .bold, design: .rounded))
