@@ -1,3 +1,10 @@
+## [1.3.3](https://github.com/danielvm-git/docklock/compare/v1.3.2...v1.3.3) (2026-05-21)
+
+
+### Bug Fixes
+
+* comprehensive gatekeeper instructions and script fixes ([#3](https://github.com/danielvm-git/docklock/issues/3)) ([85ce236](https://github.com/danielvm-git/docklock/commit/85ce236b1dd36ba30c40fb73332f8ebe85ca9cf5))
+
 ## [1.3.2](https://github.com/danielvm-git/docklock/compare/v1.3.1...v1.3.2) (2026-05-21)
 
 
