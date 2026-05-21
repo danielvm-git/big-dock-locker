@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "DockLock",
     platforms: [
-        .macOS(.v14)
+        .macOS(.v13)
     ],
     targets: [
         .executableTarget(

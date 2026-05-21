@@ -9,7 +9,7 @@
 **v1.3.5 Signature Edition** features a refined visual theme and professional identity.
 
 [![Swift Version](https://img.shields.io/badge/Swift-6.0-F05138.svg)](https://swift.org)
-[![Platform](https://img.shields.io/badge/Platforms-macOS_14+-lightgrey.svg)](https://developer.apple.com/macos/)
+[![Platform](https://img.shields.io/badge/Platforms-macOS_13+-lightgrey.svg)](https://developer.apple.com/macos/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
@@ -52,7 +52,9 @@
 Follow these three steps to get **DockLock** running on your Mac.
 
 ### 1. Download & Install
-1.  Go to the [Releases](https://github.com/danielvm-git/docklock/releases) page and download the latest `DockLock-Installer.dmg`.
+1.  Go to the [Releases](https://github.com/danielvm-git/docklock/releases) page and download the installer for your Mac type:
+    *   **Apple Silicon (M1/M2/M3):** Download `DockLock-arm64.dmg`.
+    *   **Intel Mac:** Download `DockLock-x86_64.dmg`.
 2.  Open the `.dmg` file and drag the **DockLock** icon into your **Applications** folder.
 
 ### 2. Allow the App (Security & Privacy)
@@ -100,7 +102,7 @@ Ensure that the Accessibility toggle in System Settings is active. If it is alre
 ## 👨‍💻 Development
 
 ### Prerequisites
-*   macOS 14 (Sonoma) or newer.
+*   macOS 13 (Ventura) or newer.
 *   **Xcode 15+** or the latest Swift command-line tools.
 
 ### Build from Source

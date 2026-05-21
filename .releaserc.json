@@ -7,7 +7,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "./scripts/update-version.sh ${nextRelease.version} && ./scripts/build-app.sh && ./scripts/create-dmg.sh"
+        "prepareCmd": "./scripts/update-version.sh ${nextRelease.version} && ./scripts/build-app.sh --arch arm64 && ./scripts/create-dmg.sh --arch arm64 && ./scripts/build-app.sh --arch x86_64 && ./scripts/create-dmg.sh --arch x86_64"
       }
     ],
     [
@@ -21,7 +21,8 @@
       "@semantic-release/github",
       {
         "assets": [
-          {"path": "DockLock.dmg", "label": "DockLock Installer v${nextRelease.version} (macOS)"}
+          {"path": "DockLock-arm64.dmg", "label": "DockLock Installer (Apple Silicon) v${nextRelease.version}"},
+          {"path": "DockLock-x86_64.dmg", "label": "DockLock Installer (Intel) v${nextRelease.version}"}
         ]
       }
     ]

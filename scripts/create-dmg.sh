@@ -1,18 +1,21 @@
 #!/bin/bash
 set -e
 
-APP_NAME="DockLock.app"
-DMG_NAME="DockLock.dmg"
+ARCH="arm64"
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --arch) ARCH="$2"; shift ;;
+        *) echo "Unknown parameter: $1"; exit 1 ;;
+    esac
+    shift
+done
+
+APP_NAME="DockLock-$ARCH.app"
+DMG_NAME="DockLock-$ARCH.dmg"
 
 # Ensure the app exists
 if [ ! -d "$APP_NAME" ]; then
-    echo "Error: $APP_NAME not found. Please run ./scripts/build-app.sh first."
-    exit 1
-fi
-
-# Ensure Info.plist exists inside the app
-if [ ! -f "$APP_NAME/Contents/Info.plist" ]; then
-    echo "Error: $APP_NAME/Contents/Info.plist not found. App bundle is incomplete."
+    echo "Error: $APP_NAME not found. Please run ./scripts/build-app.sh --arch $ARCH first."
     exit 1
 fi
 
@@ -24,15 +27,19 @@ if [ -f "$DMG_NAME" ]; then
 fi
 
 # Use the create-dmg npm package to generate the disk image
-# We skip code signing here because it doesn't always accept ad-hoc '-' identity
-npx create-dmg "$APP_NAME" --overwrite --no-code-sign
+npx create-dmg "$APP_NAME" --overwrite --no-code-sign --no-version-in-filename
 
-# The tool often appends version/arch to the name, so let's normalize it back
-NEW_DMG=$(ls DockLock*.dmg | head -n 1)
-if [ -n "$NEW_DMG" ]; then
-    mv "$NEW_DMG" "$DMG_NAME"
-else
-    echo "Error: DMG file was not created."
+# create-dmg is stubborn and might just use "DockLock.dmg" 
+# or "DockLock-arm64.dmg" depending on its mood.
+# Let's find the DMG it just created.
+CREATED_DMG=$(ls -t *.dmg 2>/dev/null | head -n 1)
+
+if [ -n "$CREATED_DMG" ] && [ "$CREATED_DMG" != "$DMG_NAME" ]; then
+    mv "$CREATED_DMG" "$DMG_NAME"
+fi
+
+if [ ! -f "$DMG_NAME" ]; then
+    echo "Error: $DMG_NAME was not created."
     exit 1
 fi
 
