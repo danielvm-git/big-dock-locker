@@ -1,3 +1,15 @@
+# [1.3.0](https://github.com/danielvm-git/docklock/compare/v1.2.0...v1.3.0) (2026-05-21)
+
+
+### Bug Fixes
+
+* add missing CFBundleExecutable to Info.plist ([5c54a23](https://github.com/danielvm-git/docklock/commit/5c54a2335a912612ee0a7038b039819ccfa2b4ff))
+
+
+### Features
+
+* **ui:** display version dynamically from bundle ([5522a8c](https://github.com/danielvm-git/docklock/commit/5522a8c9405a0ac51308fc8f0ad4665708dad7a2))
+
 # [1.2.0](https://github.com/danielvm-git/docklock/compare/v1.1.0...v1.2.0) (2026-05-21)
 
 
