@@ -95,7 +95,17 @@ MacOS requires **Accessibility Permissions** to allow DockLock to monitor mouse 
 
 ---
 
-## 🏗 Technical Architecture
+## 🛠 Troubleshooting
+
+### "DockLock" cannot be opened because it is from an unidentified developer
+Because this is an open-source project and the pre-built binaries are ad-hoc signed, macOS might block the first launch.
+
+1.  Open the **Applications** folder.
+2.  **Right-click** (or Control-click) the **DockLock** app and select **Open**.
+3.  In the dialog that appears, click **Open** again.
+4.  You will only need to do this once.
+
+---
 
 DockLock is built with **Swift 6** and **SwiftUI**, utilizing low-level macOS APIs for its core functionality:
 
