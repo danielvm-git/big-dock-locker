@@ -21,7 +21,7 @@
       "@semantic-release/github",
       {
         "assets": [
-          {"path": "DockLock.zip", "label": "DockLock v${nextRelease.version}"}
+          {"path": "DockLock.dmg", "label": "DockLock Installer v${nextRelease.version} (macOS)"}
         ]
       }
     ]

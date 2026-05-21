@@ -10,3 +10,4 @@ node_modules/
 DockLock.zip
 DockLock.app/
 package-lock.json
+*.dmg

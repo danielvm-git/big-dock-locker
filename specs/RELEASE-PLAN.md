@@ -97,34 +97,34 @@ Acceptance Criteria:
 - App Sandbox: If the app is sandboxed, some display info might be limited (but we are currently not sandboxed).
 - UI Blocking: Ensure the `CGEventTap` doesn't block the main thread.
 
-## Epic 4: Visual Polish & Identity (v1.1)
+## Epic 4: Visual Polish & Identity (v1.1 - Current)
 Priority: P1 | Value: High | Effort: S | WSJF: 7.0
+**Status: [x] Done**
+- Apply "Paper & Ink" theme.
+- Create official AppIcon.icns.
 
-### Story 4.1: As a user, I want the app to have a consistent visual theme.
-Status: [ ] Not started
-Tasks:
-  - [ ] Apply "Paper & Ink" color tokens to DashboardView → verify: `swift build`
-  - [ ] Implement branding (Sodalite Blue accents) across all UI elements → verify: `swift run`
+## Epic 5: Professional Distribution (v1.2 - Next)
+Priority: P1 | Value: High | Effort: M | WSJF: 6.5
+**Status: [x] Done**
 
-### Story 4.2: As a user, I want the app to have a professional icon.
-Status: [ ] Not started
-Tasks:
-  - [ ] Generate `AppIcon.icns` based on system design logo → verify: Check bundle resources
-  - [ ] Update `run.sh` to embed the icon in the `.app` bundle → verify: Icon appears in Finder/Dock
+### Story 5.1: As a user, I want a .dmg installer so I can easily drag the app to /Applications.
+- **Tasks:**
+  - [x] Implement `create-dmg` script to generate a branded Disk Image → verify: `./scripts/create-dmg.sh`
+  - [x] Configure GitHub Actions to attach `.dmg` instead of `.zip` to releases → verify: Check GitHub Release assets
 
 ---
 
 ## Future Roadmap (V2: Advanced UX & Feedback)
 
-### Epic 5: Smart Onboarding & Permissions
-- **Story 5.1:** Interactive Onboarding Wizard (Welcome -> Permission -> Choose Anchor).
-- **Story 5.2:** Haptic Feedback on intercept (subtle tap on Force Touch trackpads).
+### Epic 6: Smart Onboarding & Permissions
+- **Story 6.1:** Interactive Onboarding Wizard (Welcome -> Permission -> Choose Anchor).
+- **Story 6.2:** Haptic Feedback on intercept (subtle tap on Force Touch trackpads).
 
-### Epic 6: Deep Analytics & Activity
-- **Story 6.1:** Prevention Counter (track total "Dock jumps" blocked by the engine).
-- **Story 6.2:** Activity Log (Live event stream showing topology changes and intercepts).
-- **Story 6.3:** Pause Timer (Quick-pause for 30s/1m via Menu Bar/Dashboard).
+### Epic 7: Deep Analytics & Activity
+- **Story 7.1:** Prevention Counter (track total "Dock jumps" blocked by the engine).
+- **Story 7.2:** Activity Log (Live event stream showing topology changes and intercepts).
+- **Story 7.3:** Pause Timer (Quick-pause for 30s/1m via Menu Bar/Dashboard).
 
-### Epic 7: Sidebar Navigation
-- **Story 7.1:** Full macOS Sidebar layout as seen in System Design.
-- **Story 7.2:** Categorized views (Status, Displays, Behavior, Activity, About).
+### Epic 8: Sidebar Navigation
+- **Story 8.1:** Full macOS Sidebar layout as seen in System Design.
+- **Story 8.2:** Categorized views (Status, Displays, Behavior, Activity, About).

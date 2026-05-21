@@ -32,9 +32,9 @@
 
 You can download the latest pre-built version of **DockLock** from the [Releases](https://github.com/danielvm-git/docklock/releases) page.
 
-1.  Download the `DockLock.zip` file.
-2.  Unzip it and move `DockLock.app` to your `/Applications` folder.
-3.  Follow the [Permissions](#2-permissions-crucial) guide below.
+1.  Download the `DockLock Installer (macOS)` (`.dmg` file).
+2.  Open the file and drag `DockLock` to your `/Applications` folder.
+3.  Launch the app and follow the [Permissions](#2-permissions-crucial) guide below.
 
 ---
 

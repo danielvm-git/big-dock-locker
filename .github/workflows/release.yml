@@ -43,8 +43,9 @@ jobs:
           # Sign the app (Ad-hoc signing in CI)
           codesign -s - -f --entitlements Entitlements.plist DockLock.app
           
-          # Zip the app
-          zip -r DockLock.zip DockLock.app
+          # Create DMG Installer
+          npx create-dmg DockLock.app || true
+          mv DockLock*.dmg DockLock.dmg
 
       - name: Release
         env:
