@@ -1,155 +1,25 @@
-# DockLock Release Plan
+# Release Plan - Gatekeeper Malware Warning Fix
 
-## Epic 1: Foundation & Core Logic
-Priority: P1 | Value: High | Effort: M | WSJF: 5.4
+## Context
+The application triggers a "malware" warning on macOS because it uses suspicious entitlements (`allow-jit`, `allow-unsigned-executable-memory`) and a deprecated signing algorithm (`sha1`). This plan removes those entitlements and modernizes the signing process to reduce Gatekeeper friction.
 
-### Story 1.1: As a user, I want the app to detect my monitors so that I can choose which one to lock.
-Status: [ ] Not started
+## User Stories
 
-Acceptance Criteria:
-  Feature: Monitor Detection
-    Scenario: App identifies all connected displays
-      Given multiple monitors are connected
-      When the app starts
-      Then it retrieves a list of all display IDs and names
+### Story 1: Modernize Signing and Entitlements
+As a user, I want to download and run DockLock without a scary malware warning so that I can trust the application.
 
-**Context**: This story implements the foundational display detection logic using CoreGraphics. It allows the app to know what screens are available so the user can eventually pick one to lock the Dock to.
+**Implementation Steps:**
 
-## Steps
-1. Define `DisplayInfo` model and `DisplayManager` protocol/class → verify: `swift build`
-2. Implement `DisplayManager.getAllDisplays()` using `NSScreen` and `CGDisplay` APIs → verify: `swift test --filter DisplayManagerTests`
-3. Add a temporary CLI flag `--list-displays` to `DockLock` to output detected screens → verify: `swift run DockLock --list-displays`
+1. Clean up `Entitlements.plist` by removing JIT and unsigned memory entitlements → verify: `grep -E "allow-jit|allow-unsigned-executable-memory" Entitlements.plist` returns nothing.
+2. Update `scripts/build-app.sh` to use only `sha256` and remove `--deep` from the initial signing (keeping it for verification) → verify: `./scripts/build-app.sh` does not output SHA1 deprecation warnings.
+3. Verify the final app bundle signature integrity → verify: `codesign -vvv --deep DockLock.app` returns "valid on disk" and "satisfies its Designated Requirement".
+4. Re-create the DMG to ensure it remains unsigned and mounts correctly → verify: `./scripts/create-dmg.sh && codesign -dvvv DockLock.dmg` fails with "code object is not signed at all".
+5. Run automated tests to ensure core logic is unaffected → verify: `swift test`
 
-## Out of scope
-- UI representation of displays (covered in Epic 2).
-- Persistence of selected display (covered in Epic 3).
+## Out of Scope
+- Obtaining a paid Apple Developer ID for notarization.
+- Automated UI testing of the Gatekeeper dialog itself.
 
 ## Risks
-- No monitors detected (edge case): Need to handle empty display list gracefully.
-- Permissions: Some display info might require Screen Recording permissions on modern macOS (though `NSScreen` usually doesn't for basic info).
-
-### Story 1.2: As a user, I want to prevent the Dock from jumping to other monitors.
-Status: [ ] Not started
-
-Acceptance Criteria:
-  Feature: Anti-Jumping Logic
-    Scenario: Mouse gesture at bottom of non-locked screen is ignored
-      Given the Dock is locked to Monitor A
-      When the mouse cursor stays at the bottom of Monitor B
-      Then the Dock remains on Monitor A
-
-**Context**: This story implements the core mechanism of DockLock: a CGEventTap that monitors mouse movements and prevents the cursor from triggering the Dock's monitor-jump gesture on non-selected displays.
-
-## Steps
-1. Create `DockLockEngine` class and `PermissionManager` to check/request Accessibility access → verify: `swift run DockLock --check-permissions`
-2. Implement `CGEventTap` callback in `DockLockEngine` to detect mouse at screen edges → verify: `swift build`
-3. Implement "bouncing" logic to keep mouse 2 pixels away from the bottom edge of non-locked displays → verify: Manual test (requires permissions)
-
-## Out of scope
-- Permanent background service (handled in Epic 3).
-- Fine-grained control over "bounce" distance.
-
-## Risks
-- Accessibility Permissions: The app must be granted permissions by the user. If denied, the logic won't work.
-- Performance: Mouse event taps run for every movement; logic must be O(1) and extremely fast.
-- Multiple Monitors Setup: Complex topologies might require careful coordinate math.
-
-## Epic 2: Menu Bar & Dashboard UI
-Priority: P1 | Value: High | Effort: S | WSJF: 6.0
-
-### Story 2.1: As a user, I want to access DockLock from the Menu Bar.
-Status: [ ] Not started
-
-Acceptance Criteria:
-  Feature: Menu Bar Integration
-    Scenario: Menu Bar icon is visible
-      When the app launches
-      Then a DockLock icon appears in the macOS Menu Bar
-
-**Context**: This story transitions the app from a CLI tool to a resident Menu Bar application. It sets up the system tray presence and basic application lifecycle.
-
-## Steps
-1. Refactor `DockLock.swift` to a SwiftUI `App` and implement `MenuBarController` → verify: `swift build`
-2. Add "Dashboard" and "Quit" menu items to the `NSStatusItem` → verify: `swift run` and check the menu bar
-
-### Story 2.2: As a user, I want a Dashboard UI to select the locked monitor.
-Status: [ ] Not started
-
-Acceptance Criteria:
-  Feature: Dashboard UI
-    Scenario: Select a monitor from the list
-      Given the Dashboard is open
-      When I click on a monitor representation
-      Then that monitor becomes the 'Locked' display
-
-**Context**: This story provides the "face" of the application—a SwiftUI dashboard where users can see their monitor layout and choose which screen should hold the Dock.
-
-## Steps
-1. Create `DockLockViewModel` to manage app state (monitors, permissions, locking) → verify: `swift test --filter ViewModelTests` (if implemented)
-2. Implement `DashboardView` with a list of displays and "Lock" toggles → verify: `swift build`
-3. Integrate `DashboardView` into the `MenuBarController` as a popover or window → verify: `swift run` and click "Dashboard"
-
-## Out of scope
-- Custom monitor layout visualization (simple list for now).
-- Dark/Light mode specific asset optimization (use SF Symbols).
-
-## Risks
-- App Sandbox: If the app is sandboxed, some display info might be limited (but we are currently not sandboxed).
-- UI Blocking: Ensure the `CGEventTap` doesn't block the main thread.
-
-## Epic 4: Visual Polish & Identity (v1.1 - Current)
-Priority: P1 | Value: High | Effort: S | WSJF: 7.0
-**Status: [x] Done**
-- Apply "Paper & Ink" theme.
-- Create official AppIcon.icns.
-
-## Epic 5: Professional Distribution (v1.2 - Next)
-Priority: P1 | Value: High | Effort: M | WSJF: 6.5
-**Status: [x] Done**
-
-### Story 5.1: As a user, I want a .dmg installer so I can easily drag the app to /Applications.
-- **Tasks:**
-  - [x] Implement `create-dmg` script to generate a branded Disk Image → verify: `./scripts/create-dmg.sh`
-  - [x] Configure GitHub Actions to attach `.dmg` instead of `.zip` to releases → verify: Check GitHub Release assets
-
-### Story 5.2: Fix Release Versioning and Distribution (v1.3.1)
-Status: [x] Done
-
-### Story 5.3: Enhance Security Documentation & Gatekeeper Bypass (v1.3.2)
-Status: [ ] In Progress
-
-Acceptance Criteria:
-  Feature: Clear Security Instructions
-    Scenario: User encounters Gatekeeper warning and finds a solution in README
-      Given the app is not notarized
-      When the user sees "Apple could not verify..."
-      Then the README provides a clear, 3-step visual or text-based bypass guide
-      And the README explains the ad-hoc signing situation
-
-**Context**: This story addresses the friction caused by macOS Gatekeeper for ad-hoc signed apps. Since we cannot notarize without a paid account, we must provide excellent documentation to help users trust and run the app.
-
-## Steps
-1. Add "Gatekeeper & Security" section to `README.md` with explicit error message matching → verify: `grep "Apple could not verify" README.md`
-2. Update `scripts/create-dmg.sh` to use `--identity=-` if supported, to explicitly mark the DMG as ad-hoc signed → verify: `./scripts/create-dmg.sh`
-3. Create a small `scripts/fix-quarantine.sh` for power users and reference it in README → verify: `ls scripts/fix-quarantine.sh`
-
-## Out of scope
-- Notarization.
-- Self-signing certificates.
-
----
-
-## Future Roadmap (V2: Advanced UX & Feedback)
-
-### Epic 6: Smart Onboarding & Permissions
-- **Story 6.1:** Interactive Onboarding Wizard (Welcome -> Permission -> Choose Anchor).
-- **Story 6.2:** Haptic Feedback on intercept (subtle tap on Force Touch trackpads).
-
-### Epic 7: Deep Analytics & Activity
-- **Story 7.1:** Prevention Counter (track total "Dock jumps" blocked by the engine).
-- **Story 7.2:** Activity Log (Live event stream showing topology changes and intercepts).
-- **Story 7.3:** Pause Timer (Quick-pause for 30s/1m via Menu Bar/Dashboard).
-
-### Epic 8: Sidebar Navigation
-- **Story 8.1:** Full macOS Sidebar layout as seen in System Design.
-- **Story 8.2:** Categorized views (Status, Displays, Behavior, Activity, About).
+- Removing `--deep` might miss nested components if they are added in the future, but current structure is flat.
+- macOS Gatekeeper behavior is opaque and may still show a warning (unidentified developer), but it should no longer mention "malware" as prominently if the signature is "cleaner".

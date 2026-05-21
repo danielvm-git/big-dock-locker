@@ -23,8 +23,8 @@ cp Info.plist "$APP_NAME/Contents/Info.plist"
 cp AppIcon.icns "$APP_NAME/Contents/Resources/AppIcon.icns"
 
 echo "Signing $APP_NAME..."
-# Using --deep to sign nested content, and including both sha1/sha256 for maximum compatibility.
+# Using --digest-algorithm=sha256 for modern security.
 # --force ensures we overwrite any automatic linker signature.
-codesign --force --deep --digest-algorithm=sha1,sha256 -s - --entitlements Entitlements.plist "$APP_NAME"
+codesign --force --digest-algorithm=sha256 -s - --entitlements Entitlements.plist "$APP_NAME"
 
 echo "Done! $APP_NAME is ready."
