@@ -36,8 +36,4 @@ else
     exit 1
 fi
 
-# Manually sign the DMG ad-hoc
-echo "Signing $DMG_NAME..."
-codesign -s - "$DMG_NAME"
-
-echo "Done! $DMG_NAME is ready and ad-hoc signed."
+echo "Done! $DMG_NAME is ready."
