@@ -1,3 +1,10 @@
+## [1.3.4](https://github.com/danielvm-git/docklock/compare/v1.3.3...v1.3.4) (2026-05-21)
+
+
+### Bug Fixes
+
+* trigger release for DMG signing revert ([5dc5ea3](https://github.com/danielvm-git/docklock/commit/5dc5ea31b36e09e97318bcc8d959a7e573d5ff32))
+
 ## [1.3.3](https://github.com/danielvm-git/docklock/compare/v1.3.2...v1.3.3) (2026-05-21)
 
 
