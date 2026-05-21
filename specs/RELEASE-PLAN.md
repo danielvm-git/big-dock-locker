@@ -115,27 +115,102 @@ Priority: P1 | Value: High | Effort: M | WSJF: 6.5
 ### Story 5.2: Fix Release Versioning and Distribution (v1.3.1)
 Status: [x] Done
 
-### Story 5.3: Enhance Security Documentation & Gatekeeper Bypass (v1.3.2)
-Status: [ ] In Progress
+### Story 5.3: Enhance Security Documentation & Gatekeeper Bypass (v1.3.2 → v1.3.4)
+Status: [x] Done
 
 Acceptance Criteria:
   Feature: Clear Security Instructions
     Scenario: User encounters Gatekeeper warning and finds a solution in README
       Given the app is not notarized
       When the user sees "Apple could not verify..."
-      Then the README provides a clear, 3-step visual or text-based bypass guide
+      Then the README provides a clear, Sequoia-correct bypass guide
       And the README explains the ad-hoc signing situation
 
-**Context**: This story addresses the friction caused by macOS Gatekeeper for ad-hoc signed apps. Since we cannot notarize without a paid account, we must provide excellent documentation to help users trust and run the app.
-
-## Steps
-1. Add "Gatekeeper & Security" section to `README.md` with explicit error message matching → verify: `grep "Apple could not verify" README.md`
-2. Update `scripts/create-dmg.sh` to use `--identity=-` if supported, to explicitly mark the DMG as ad-hoc signed → verify: `./scripts/create-dmg.sh`
-3. Create a small `scripts/fix-quarantine.sh` for power users and reference it in README → verify: `ls scripts/fix-quarantine.sh`
+**Context**: Addressed in v1.3.4. README now matches the literal Sequoia dialog text and documents the working bypass paths (`xattr -dr` and System Settings → Open Anyway). The right-click trick was removed by Apple in Sequoia for this dialog and is no longer the primary recommendation.
 
 ## Out of scope
-- Notarization.
-- Self-signing certificates.
+- Notarization (see Story 5.4).
+- Entitlements / codesign audit (see Stories 5.5 and 5.6).
+
+### Story 5.4: Apple Notarization to remove first-launch warning
+Status: [ ] Not started
+Priority: P2 | Value: High | Effort: M | WSJF: 4.5
+
+Acceptance Criteria:
+  Feature: Notarized Distribution
+    Scenario: User downloads DockLock from GitHub Releases on a clean Mac
+      Given the .dmg comes from GitHub Releases
+      When the user double-clicks the installed app
+      Then no Gatekeeper warning appears on first launch
+
+**Context**: As long as DockLock is only ad-hoc signed, Sequoia will show "Apple could not verify ... free of malware" on every clean-install first launch. The only way to eliminate the dialog is Apple Notarization.
+
+## Steps
+1. Enroll in the Apple Developer Program ($99/yr) and provision a Developer ID Application certificate.
+2. Import the cert and notarization credentials into GitHub Actions secrets.
+3. Update `scripts/build-app.sh` to sign with the Developer ID identity instead of `-`.
+4. Add `xcrun notarytool submit --wait` + `xcrun stapler staple` to the release workflow.
+5. Verify on a clean macOS box that the dialog no longer appears.
+
+## Out of scope
+- Migrating to a paid Mac App Store distribution.
+
+## Risks
+- Cost: ongoing $99/yr.
+- CI complexity: notarization can take minutes per release; need timeout/retry handling.
+
+### Story 5.5: Audit and minimize codesign entitlements
+Status: [ ] Not started
+Priority: P3 | Value: Low-Medium | Effort: S | WSJF: 3.0
+
+Acceptance Criteria:
+  Feature: Minimal Entitlements
+    Scenario: Build produces an app with only justified entitlements
+      Given Entitlements.plist
+      When the app is built and signed
+      Then every remaining entitlement has a documented reason in a code comment
+      And the app still launches and prevents Dock jumps on Apple Silicon and Intel
+
+**Context**: `Entitlements.plist` currently grants five `cs.*` privileged entitlements — `allow-jit`, `allow-unsigned-executable-memory`, `disable-executable-page-protection`, `disable-library-validation`, `allow-dyld-environment-variables` — all added in commit `160a9aa` without a documented rationale. A non-sandboxed SwiftUI app using Accessibility + CGEventTap should need none of these, and they make the binary look like a JIT/exploit vector. They are also not honored under ad-hoc signing, so removing them is unlikely to change runtime behavior — but it must be verified on real hardware.
+
+## Steps
+1. Remove all five entitlements and rebuild → verify: `swift build && ./scripts/build-app.sh`
+2. Manually smoke-test on Apple Silicon: launch app, grant Accessibility, start engine, confirm Dock jumps are prevented across multiple monitors.
+3. If any entitlement is genuinely needed, restore it with a `<!-- justified because: ... -->` XML comment.
+4. Repeat smoke test on Intel if available.
+
+## Out of scope
+- Codesign flag changes (see Story 5.6).
+
+## Risks
+- Apple Silicon hardware required for a real test before merging.
+
+### Story 5.6: Modernize codesign invocation
+Status: [ ] Not started
+Priority: P3 | Value: Low | Effort: XS | WSJF: 2.0
+
+Acceptance Criteria:
+  Feature: Modern Signing
+    Scenario: Build script signs without deprecated options
+      Given scripts/build-app.sh
+      When the app is built
+      Then codesign uses sha256 only and no --deep flag
+      And the produced bundle passes `codesign -vvv`
+      And the app still launches on Apple Silicon and Intel
+
+**Context**: PR #4 added `--deep --digest-algorithm=sha1,sha256` to `scripts/build-app.sh` with the comment "for maximum compatibility / Apple Silicon". DockLock has no nested bundles, frameworks, or dylibs, so `--deep` is a no-op; sha1 has been deprecated by Apple. The reduced form is `codesign --force -s - --entitlements Entitlements.plist DockLock.app`.
+
+## Steps
+1. Simplify the codesign call.
+2. Run the full build + DMG pipeline.
+3. Smoke-test the resulting app on Apple Silicon.
+
+## Out of scope
+- Entitlement audit (see Story 5.5).
+- Notarization (see Story 5.4).
+
+## Risks
+- The PR #4 rationale ("Apple Silicon compatibility") is technically thin, but it just shipped — needs a real-hardware regression test before merging.
 
 ---
 

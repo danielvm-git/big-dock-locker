@@ -97,26 +97,42 @@ MacOS requires **Accessibility Permissions** to allow DockLock to monitor mouse 
 
 ## 🛠 Troubleshooting
 
-### "DockLock" cannot be opened because it is from an unidentified developer
-Because this is an open-source project and the pre-built binaries are ad-hoc signed, macOS blocks the first launch.
+### "Apple could not verify 'DockLock' is free of malware"
 
-#### 🛡️ The 3-Step Security Bypass
-1.  **Open the DMG:** Right-click (or Control-click) the `.dmg` file and select **Open**. This mounts the unsigned disk image.
-2.  **Move to Applications:** Drag `DockLock` from the DMG to your **Applications** folder. **Do not run it directly from the DMG.**
-3.  **Right-Click Open the App:** In the Applications folder, **Right-click** (or Control-click) the **DockLock** icon and select **Open**. Click **Open** again.
+This is the standard macOS Gatekeeper dialog for any app that hasn't been **Notarized by Apple**. DockLock is ad-hoc signed but not notarized (notarization requires a paid Apple Developer Program membership — it's on the roadmap). The source is fully auditable in this repository.
 
-You will only need to do this once.
+The bypass is one-time per install.
 
-#### 💻 Power User Fix (Terminal)
-If the right-click method fails, you can manually remove the "quarantine" flag that macOS attaches to downloaded files:
+#### Recommended: remove the quarantine flag (Terminal)
+
+This works on every macOS version and skips the dialog entirely on the next launch:
+
 ```bash
-xattr -d com.apple.quarantine /Applications/DockLock.app
+xattr -dr com.apple.quarantine /Applications/DockLock.app
 ```
 
-Alternatively, you can run the included helper script from the source:
+Or run the included helper script from a clone of the repo:
+
 ```bash
 ./scripts/fix-quarantine.sh
 ```
+
+#### GUI bypass on macOS 15 Sequoia (System Settings)
+
+On Sequoia, Apple **removed** the old right-click → Open shortcut for this specific "free of malware" dialog. The current path is:
+
+1.  Double-click `DockLock.app` in `/Applications`. macOS will show the warning and refuse to launch.
+2.  Open **System Settings → Privacy & Security**.
+3.  Scroll to the security message that reads "DockLock was blocked to protect your Mac." Click **Open Anyway**.
+4.  Authenticate with Touch ID or your password.
+5.  Click **Open** in the confirmation dialog. The app launches and won't prompt again.
+
+#### macOS 14 (Sonoma) and earlier
+
+The old right-click trick still works for the *legacy* "unidentified developer" dialog, but **not** for the newer "free of malware" dialog on Sequoia:
+
+1.  In `/Applications`, **right-click** (or Control-click) the **DockLock** icon and select **Open**.
+2.  Click **Open** in the dialog.
 
 
 ---
