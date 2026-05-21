@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/danielvm-git/docklock/compare/v1.3.5...v1.4.0) (2026-05-21)
+
+
+### Features
+
+* implement Intel support via separate DMGs ([1a31efe](https://github.com/danielvm-git/docklock/commit/1a31efee7df4c6c44165bc17b600dc5b54fe8561))
+
 ## [1.3.5](https://github.com/danielvm-git/docklock/compare/v1.3.4...v1.3.5) (2026-05-21)
 
 
