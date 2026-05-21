@@ -1,5 +1,9 @@
 # DockLock 🔒
 
+<p align="center">
+  <img src="Assets/AppIcon.png" alt="DockLock Logo" width="128">
+</p>
+
 [![Swift Version](https://img.shields.io/badge/Swift-6.0-F05138.svg)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platforms-macOS_14+-lightgrey.svg)](https://developer.apple.com/macos/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
