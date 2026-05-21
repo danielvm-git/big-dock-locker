@@ -98,11 +98,10 @@ MacOS requires **Accessibility Permissions** to allow DockLock to monitor mouse 
 ## 🛠 Troubleshooting
 
 ### "DockLock" cannot be opened because it is from an unidentified developer
-Because this is an open-source project and the pre-built binaries are ad-hoc signed, macOS might block the first launch with a warning like: 
-> **"Apple could not verify “DockLock” is free of malware..."**
+Because this is an open-source project and the pre-built binaries are ad-hoc signed, macOS blocks the first launch.
 
 #### 🛡️ The 3-Step Security Bypass
-1.  **Open the DMG:** If you see "Apple could not verify...", **Right-click** (or Control-click) the `.dmg` file and select **Open**. Click **Open** again in the dialog.
+1.  **Open the DMG:** Right-click (or Control-click) the `.dmg` file and select **Open**. This mounts the unsigned disk image.
 2.  **Move to Applications:** Drag `DockLock` from the DMG to your **Applications** folder. **Do not run it directly from the DMG.**
 3.  **Right-Click Open the App:** In the Applications folder, **Right-click** (or Control-click) the **DockLock** icon and select **Open**. Click **Open** again.
 
