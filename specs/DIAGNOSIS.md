@@ -1,49 +1,54 @@
 ## Problem
 
-A user reported that after downloading the DMG version 1.3.1, they encounter a Gatekeeper warning:
-"Apple could not verify “DockLock” is free of malware that may harm your Mac or compromise your privacy."
-The user stated they used Right-Click -> Open, which is the standard bypass, but it seems they are still seeing a blocking message or are confused by the scary wording.
+Users are reporting that the `.dmg` file itself is being blocked by macOS Gatekeeper with the message:
+"Apple could not verify “DockLock-4.dmg” is free of malware that may harm your Mac or compromise your privacy."
+
+This prevents the user from even mounting the disk image to access the application.
 
 ## Root Cause Analysis
 
-### Gatekeeper and Ad-hoc Signing
-DockLock is currently ad-hoc signed (`codesign -s -`) because it is an open-source project without an Apple Developer Program membership for official notarization.
-On modern macOS (especially Sonoma/Sequoia), Gatekeeper is extremely restrictive with ad-hoc signed apps downloaded from the internet.
+### DMG Gatekeeper Blocking
+On macOS Sonoma and Sequoia, any file downloaded from the internet (with the `com.apple.quarantine` attribute) is subject to Gatekeeper. If the file is not notarized, macOS shows the "Apple could not verify..." warning.
 
-1. **Scary Wording**: The "Apple could not verify..." message is the standard warning for any app that is not notarized. 
-2. **Right-Click Bypass**: While Right-Click -> Open usually provides an "Open" button, some users might still find it intimidating or macOS might require the app to be moved to `/Applications` first for the bypass to stick.
-3. **Quarantine Attribute**: Downloaded files have the `com.apple.quarantine` attribute. For ad-hoc apps, this attribute sometimes persists even after the right-click attempt if not done correctly.
+1. **Ad-hoc Signing**: Currently, the `create-dmg.sh` script signs the DMG ad-hoc (`codesign -s -`). While technically a signature, it is not from a trusted developer ID, so it triggers the same warning as an unsigned file.
+2. **User Confusion**: Users are accustomed to being able to open DMGs. The strictness of recent macOS versions on ad-hoc signed DMGs might be higher than expected.
+3. **Double Blocking**: The user faces two hurdles: first opening the DMG, then opening the App. If the first hurdle fails, they never see the instructions inside or in the README for the second hurdle.
 
 ### Contributing Factors
-- The troubleshooting guide in `README.md` might be too brief.
-- Users might be trying to run the app directly from the DMG, which triggers stricter Gatekeeper checks.
+- The `npx create-dmg` tool might be adding metadata that macOS finds suspicious when combined with an ad-hoc signature.
+- The `README.md` focuses on bypassing the `.app` block but doesn't explicitly mention that the `.dmg` itself might need a Right-Click -> Open bypass.
 
-Risk level: **Low** (Security feature of macOS, not a bug in DockLock code, but a distribution/UX issue).
+Risk level: **Medium** (High impact on user experience/installation).
 
 ## Fix Approach
 
-1. **Enhance Troubleshooting Documentation**: Add a dedicated "Gatekeeper & Security" section to the README with a screenshot (if possible) or very explicit step-by-step instructions.
-2. **Add a Security Helper Script**: Provide a simple `open_binary_folder.sh` (already exists but for a different purpose) or a `fix-permissions.sh` that users can run if they are comfortable with the terminal, or simply improve the manual instructions.
-3. **Clarify DMG Usage**: Explicitly state that the app MUST be moved to `/Applications` before attempting to open it via right-click.
+1. **Explicit DMG Instructions**: Update `README.md` to explicitly mention that the DMG itself may need the Right-Click bypass.
+2. **Simplified DMG Creation**: Test if an unsigned DMG is "easier" to open or if we should stick with ad-hoc signing but with better instructions.
+3. **Improve Security Helper**: Update `fix-quarantine.sh` to optionally handle the DMG path if passed as an argument.
 
 ## TDD Fix Plan
 
 ### 1. Documentation Update
-**RED**: Check if `README.md` contains explicit instructions for the "Apple could not verify" message.
-**GREEN**: Add a detailed "Gatekeeper & Security" section to `README.md` explaining *why* the message appears (ad-hoc signing) and providing the exact 3-step bypass.
-**verify**: `grep "Apple could not verify" README.md`
+**RED**: Check if `README.md` mentions the DMG block.
+**GREEN**: Add specific instructions for opening the DMG itself (Right-Click -> Open).
+**verify**: `grep "Right-Click the DMG" README.md`
 
-### 2. Improve DMG script
-**RED**: Check if `create-dmg.sh` uses any signing on the DMG itself.
-**GREEN**: Use `--identity=-` for `create-dmg` if possible, or ensure the `.app` is signed *before* it's put in the DMG (already done, but double check).
+### 2. Script Improvement
+**RED**: `scripts/create-dmg.sh` signs the DMG without verifying if it's necessary or if it causes more friction.
+**GREEN**: Ensure the `.app` is signed, but maybe leave the DMG unsigned or clearly document the behavior. Actually, keep the ad-hoc signature but ensure the instructions are perfect.
 **verify**: `./scripts/create-dmg.sh`
+
+### 3. Comprehensive Quarantine Fixer
+**RED**: `scripts/fix-quarantine.sh` only targets `/Applications/DockLock.app`.
+**GREEN**: Update the script to take an optional path, allowing users to run it on the DMG or the App anywhere.
+**verify**: `./scripts/fix-quarantine.sh ~/Downloads/DockLock.dmg` (mock path)
 
 ## Acceptance Criteria
 
-- [ ] `README.md` has a clear, prominent section for Gatekeeper issues.
-- [ ] Instructions explicitly mention the "Apple could not verify" message.
-- [ ] Instructions clarify the need to move the app to `/Applications` first.
-- [ ] (Optional) A small script to clear the quarantine attribute is provided for power users.
+- [ ] `README.md` explicitly addresses the DMG blocking message.
+- [ ] `README.md` explains the Right-Click bypass for both the DMG and the App.
+- [ ] `scripts/fix-quarantine.sh` is more flexible.
+- [ ] Instructions are verified to match the exact wording of the macOS error.
 
 ## Resolution
 <!-- filled in by validate-fix -->

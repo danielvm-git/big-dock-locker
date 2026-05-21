@@ -102,9 +102,9 @@ Because this is an open-source project and the pre-built binaries are ad-hoc sig
 > **"Apple could not verify “DockLock” is free of malware..."**
 
 #### 🛡️ The 3-Step Security Bypass
-1.  **Move to Applications:** Drag `DockLock` from the DMG to your **Applications** folder. **Do not run it directly from the DMG.**
-2.  **Right-Click Open:** In the Applications folder, **Right-click** (or Control-click) the **DockLock** icon and select **Open**.
-3.  **Confirm:** In the scary-looking dialog that appears, you will now see an **Open** button (which is missing if you just double-click). Click **Open**.
+1.  **Open the DMG:** If you see "Apple could not verify...", **Right-click** (or Control-click) the `.dmg` file and select **Open**. Click **Open** again in the dialog.
+2.  **Move to Applications:** Drag `DockLock` from the DMG to your **Applications** folder. **Do not run it directly from the DMG.**
+3.  **Right-Click Open the App:** In the Applications folder, **Right-click** (or Control-click) the **DockLock** icon and select **Open**. Click **Open** again.
 
 You will only need to do this once.
 
