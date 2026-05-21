@@ -1,3 +1,12 @@
+# [1.2.0](https://github.com/danielvm-git/docklock/compare/v1.1.0...v1.2.0) (2026-05-21)
+
+
+### Features
+
+* add AppIcon to DashboardView header ([ff1659e](https://github.com/danielvm-git/docklock/commit/ff1659ed729cb77e1702819fef07fff813798bf2))
+* add download link to README and include icon in CI build ([dfc898b](https://github.com/danielvm-git/docklock/commit/dfc898b28d8d42abf9ca425f86fedbe07bccf239))
+* transition to .dmg distribution format (v1.2) ([ec79d28](https://github.com/danielvm-git/docklock/commit/ec79d28dad3a83ca44c48f01332a9b1ec06681e3))
+
 # [1.1.0](https://github.com/danielvm-git/docklock/compare/v1.0.0...v1.1.0) (2026-05-21)
 
 
