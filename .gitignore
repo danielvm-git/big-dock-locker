@@ -11,3 +11,4 @@ DockLock.zip
 DockLock.app/
 package-lock.json
 *.dmg
+\n.claude/
