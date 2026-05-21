@@ -1,12 +1,12 @@
 #!/bin/bash
-# fix-quarantine.sh - A utility to help users run DockLock if Gatekeeper blocks it.
+# fix-quarantine.sh - A utility to help users run BigDockLocker if Gatekeeper blocks it.
 
-TARGET_PATH="${1:-/Applications/DockLock.app}"
+TARGET_PATH="${1:-/Applications/BigDockLocker.app}"
 
 if [ ! -e "$TARGET_PATH" ]; then
     echo "❌ Error: '$TARGET_PATH' not found."
     echo "Usage: $0 [path_to_app_or_dmg]"
-    echo "Default: /Applications/DockLock.app"
+    echo "Default: /Applications/BigDockLocker.app"
     exit 1
 fi
 

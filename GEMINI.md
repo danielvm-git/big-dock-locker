@@ -1,9 +1,9 @@
-# DockLock — Gemini CLI
+# Big DockLocker — Gemini CLI
 
 Read CONVENTIONS.md before any GitHub or git operation.
 
 ## Project
-A native Swift dashboard application focused exclusively on anti-jumping logic for the macOS Dock, with a roadmap for full DockLock Pro features.
+A native Swift dashboard application focused exclusively on anti-jumping logic for the macOS Dock, with a roadmap for full Big DockLocker Pro features.
 Stack: Swift / SwiftUI / macOS native
 
 ## Commands

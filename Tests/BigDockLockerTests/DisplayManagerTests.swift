@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import DockLock
+@testable import BigDockLocker
 
 struct DisplayManagerTests {
     @Test func testGetAllDisplaysReturnsAtLeastOneDisplay() async throws {

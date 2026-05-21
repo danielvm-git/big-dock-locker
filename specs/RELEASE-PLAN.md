@@ -6,15 +6,29 @@ The application triggers a "malware" warning on macOS because it uses suspicious
 ## User Stories
 
 ### Story 1: Modernize Signing and Entitlements
-As a user, I want to download and run DockLock without a scary malware warning so that I can trust the application.
+As a user, I want to download and run Big DockLocker without a scary malware warning so that I can trust the application.
 
 **Implementation Steps:**
 
 1. [x] Clean up `Entitlements.plist` by removing JIT and unsigned memory entitlements → verify: `grep -E "allow-jit|allow-unsigned-executable-memory" Entitlements.plist` returns nothing.
 2. [x] Update `scripts/build-app.sh` to use only `sha256` and remove `--deep` from the initial signing (keeping it for verification) → verify: `./scripts/build-app.sh` does not output SHA1 deprecation warnings.
-3. [x] Verify the final app bundle signature integrity → verify: `codesign -vvv --deep DockLock.app` returns "valid on disk" and "satisfies its Designated Requirement".
-4. [x] Re-create the DMG to ensure it remains unsigned and mounts correctly → verify: `./scripts/create-dmg.sh && codesign -dvvv DockLock.dmg` fails with "code object is not signed at all".
+3. [x] Verify the final app bundle signature integrity → verify: `codesign -vvv --deep BigDockLocker.app` returns "valid on disk" and "satisfies its Designated Requirement".
+4. [x] Re-create the DMG to ensure it remains unsigned and mounts correctly → verify: `./scripts/create-dmg.sh && codesign -dvvv BigDockLocker.dmg` fails with "code object is not signed at all".
 5. [x] Run automated tests to ensure core logic is unaffected → verify: `swift test`
+
+### Story 9: Rename Application to Big DockLocker
+
+**Context**: Align the application name with the "bigpowers" naming convention ("Big [Something]"). This involves a comprehensive rename of the application, Swift modules, targets, directories, and documentation.
+
+**Implementation Steps:**
+
+1. [x] Update `Package.swift` with new target and package names (`BigDockLocker`) → verify: `grep "BigDockLocker" Package.swift`
+2. [x] Rename source and test directories (`Sources/BigDockLocker` -> `Sources/BigDockLocker`, `Tests/BigDockLockerTests` -> `Tests/BigDockLockerTests`) → verify: `ls Sources/BigDockLocker && ls Tests/BigDockLockerTests`
+3. [x] Update all Swift source files with new module imports, class/struct names, and filenames → verify: `swift build`
+4. [x] Update `Info.plist` with new bundle identifier (`com.danielvm.BigDockLocker`) and display name (`Big DockLocker`) → verify: `grep "BigDockLocker" Info.plist`
+5. [x] Update all scripts (`run.sh`, `scripts/*.sh`, `open_binary_folder.sh`) and release configurations (`.releaserc.json`) → verify: `./scripts/build-app.sh --arch arm64`
+6. [x] Update documentation (`README.md`, `GEMINI.md`, `CLAUDE.md`, and all `specs/*.md`) → verify: `grep "Big DockLocker" README.md`
+7. [x] Run automated tests to ensure core logic is unaffected → verify: `swift test`
 
 ## Out of Scope
 - Obtaining a paid Apple Developer ID for notarization.

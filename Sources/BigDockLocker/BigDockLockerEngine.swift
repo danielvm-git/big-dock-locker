@@ -2,7 +2,7 @@ import Foundation
 import CoreGraphics
 import AppKit
 
-public class DockLockEngine {
+public class BigDockLockerEngine {
     private var eventTap: CFMachPort?
     private var runLoopSource: CFRunLoopSource?
     
@@ -20,7 +20,7 @@ public class DockLockEngine {
         
         let callback: CGEventTapCallBack = { (proxy, type, event, refcon) -> Unmanaged<CGEvent>? in
             guard let refcon = refcon else { return Unmanaged.passRetained(event) }
-            let engine = Unmanaged<DockLockEngine>.fromOpaque(refcon).takeUnretainedValue()
+            let engine = Unmanaged<BigDockLockerEngine>.fromOpaque(refcon).takeUnretainedValue()
             
             return engine.handleMouseEvent(event)
         }
@@ -40,7 +40,7 @@ public class DockLockEngine {
             let granted = PermissionManager.isAccessibilityGranted()
             let message = "Failed to create event tap. Accessibility: \(granted ? "TRUSTED" : "NOT TRUSTED")."
             print(message)
-            throw NSError(domain: "DockLockEngine", code: 1, userInfo: [NSLocalizedDescriptionKey: message])
+            throw NSError(domain: "BigDockLockerEngine", code: 1, userInfo: [NSLocalizedDescriptionKey: message])
         }
         
         runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, tap, 0)

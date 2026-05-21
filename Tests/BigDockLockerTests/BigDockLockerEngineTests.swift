@@ -2,9 +2,9 @@ import Testing
 import Foundation
 import CoreGraphics
 import AppKit
-@testable import DockLock
+@testable import BigDockLocker
 
-struct DockLockEngineTests {
+struct BigDockLockerEngineTests {
     
     @Test func testCoordinateConversion() async throws {
         // Mocking screen setup

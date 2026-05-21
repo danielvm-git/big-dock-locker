@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleExecutable</key>
-	<string>DockLock</string>
+	<string>BigDockLocker</string>
 	<key>CFBundleIconFile</key>
 	<string>AppIcon.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.danielvm.DockLock</string>
+	<string>com.danielvm.BigDockLocker</string>
 	<key>CFBundleName</key>
-	<string>DockLock</string>
+	<string>Big DockLocker</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -17,6 +17,6 @@
 	<key>CFBundleVersion</key>
 	<string>1.3.5</string>
 	<key>NSAccessibilityUsageDescription</key>
-	<string>DockLock needs accessibility permissions to prevent the Dock from jumping between monitors.</string>
+	<string>Big DockLocker needs accessibility permissions to prevent the Dock from jumping between monitors.</string>
 </dict>
 </plist>

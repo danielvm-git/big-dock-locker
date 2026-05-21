@@ -10,13 +10,13 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
-APP_NAME="DockLock-$ARCH.app"
+APP_NAME="BigDockLocker-$ARCH.app"
 if [ "$ARCH" == "arm64" ]; then
     DMG_LABEL="apple-silicon-mac"
 else
     DMG_LABEL="intel-mac"
 fi
-DMG_NAME="DockLock-$DMG_LABEL.dmg"
+DMG_NAME="BigDockLocker-$DMG_LABEL.dmg"
 
 # Ensure the app exists
 if [ ! -d "$APP_NAME" ]; then
@@ -34,8 +34,8 @@ fi
 # Use the create-dmg npm package to generate the disk image
 npx create-dmg "$APP_NAME" --overwrite --no-code-sign --no-version-in-filename
 
-# create-dmg is stubborn and might just use "DockLock.dmg" 
-# or "DockLock-arm64.dmg" depending on its mood.
+# create-dmg is stubborn and might just use "BigDockLocker.dmg" 
+# or "BigDockLocker-arm64.dmg" depending on its mood.
 # Let's find the DMG it just created.
 CREATED_DMG=$(ls -t *.dmg 2>/dev/null | head -n 1)
 

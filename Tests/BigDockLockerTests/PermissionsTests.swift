@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import DockLock
+@testable import BigDockLocker
 
 struct PermissionsTests {
     @Test func testAXIsProcessTrusted() async throws {

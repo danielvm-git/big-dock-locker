@@ -2,13 +2,13 @@
 import PackageDescription
 
 let package = Package(
-    name: "DockLock",
+    name: "BigDockLocker",
     platforms: [
         .macOS(.v13)
     ],
     targets: [
         .executableTarget(
-            name: "DockLock",
+            name: "BigDockLocker",
             linkerSettings: [
                 .unsafeFlags([
                     "-Xlinker", "-sectcreate",
@@ -19,8 +19,8 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "DockLockTests",
-            dependencies: ["DockLock"]
+            name: "BigDockLockerTests",
+            dependencies: ["BigDockLocker"]
         ),
     ]
 )

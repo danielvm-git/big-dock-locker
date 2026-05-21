@@ -3,7 +3,7 @@ import Combine
 import CoreGraphics
 
 @MainActor
-public class DockLockViewModel: ObservableObject {
+public class BigDockLockerViewModel: ObservableObject {
     @Published public var displays: [DisplayInfo] = []
     @Published public var lockedDisplayID: CGDirectDisplayID?
     @Published public var isGranted: Bool = false
@@ -12,7 +12,7 @@ public class DockLockViewModel: ObservableObject {
     @Published public var launchAtLogin: Bool = false
     
     private let displayManager = DisplayManager()
-    private let engine = DockLockEngine()
+    private let engine = BigDockLockerEngine()
     private var cancellables = Set<AnyCancellable>()
     
     public init() {

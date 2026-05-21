@@ -2,7 +2,7 @@ import SwiftUI
 import AppKit
 
 @main
-struct DockLockApp: App {
+struct BigDockLockerApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {
@@ -28,7 +28,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 class MenuBarController: NSObject {
     private var statusItem: NSStatusItem?
     private var dashboardWindow: NSWindow?
-    private let viewModel = DockLockViewModel()
+    private let viewModel = BigDockLockerViewModel()
     
     override init() {
         super.init()
@@ -39,7 +39,7 @@ class MenuBarController: NSObject {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         
         if let button = statusItem?.button {
-            button.image = NSImage(systemSymbolName: "lock.display", accessibilityDescription: "DockLock")
+            button.image = NSImage(systemSymbolName: "lock.display", accessibilityDescription: "Big DockLocker")
         }
         
         let menu = NSMenu()
@@ -64,7 +64,7 @@ class MenuBarController: NSObject {
             window.setFrameAutosaveName("Dashboard")
             window.contentView = NSHostingView(rootView: contentView)
             window.isReleasedWhenClosed = false
-            window.title = "DockLock Dashboard"
+            window.title = "Big DockLocker Dashboard"
             dashboardWindow = window
         }
         

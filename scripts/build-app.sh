@@ -10,24 +10,24 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
-echo "Building DockLock for $ARCH in Release mode..."
+echo "Building BigDockLocker for $ARCH in Release mode..."
 swift build -c release --arch "$ARCH"
 
 # Find the binary
-BINARY_PATH=$(find .build/"$ARCH"-apple-macosx/release -name DockLock -type f -perm +111 2>/dev/null | head -n 1)
+BINARY_PATH=$(find .build/"$ARCH"-apple-macosx/release -name BigDockLocker -type f -perm +111 2>/dev/null | head -n 1)
 
 if [ -z "$BINARY_PATH" ]; then
     echo "Error: Could not find release binary for $ARCH."
     exit 1
 fi
 
-APP_NAME="DockLock-$ARCH.app"
+APP_NAME="BigDockLocker-$ARCH.app"
 echo "Packaging $APP_NAME..."
 rm -rf "$APP_NAME"
 mkdir -p "$APP_NAME/Contents/MacOS"
 mkdir -p "$APP_NAME/Contents/Resources"
 
-cp "$BINARY_PATH" "$APP_NAME/Contents/MacOS/DockLock"
+cp "$BINARY_PATH" "$APP_NAME/Contents/MacOS/BigDockLocker"
 cp Info.plist "$APP_NAME/Contents/Info.plist"
 cp AppIcon.icns "$APP_NAME/Contents/Resources/AppIcon.icns"
 

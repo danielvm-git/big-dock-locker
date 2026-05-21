@@ -7,8 +7,8 @@ DerivedData/
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
 node_modules/
-DockLock.zip
-DockLock.app/
+BigDockLocker.zip
+BigDockLocker.app/
 package-lock.json
 *.dmg
 \n.claude/

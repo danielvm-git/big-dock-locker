@@ -2,7 +2,7 @@ import SwiftUI
 import CoreGraphics
 
 struct DashboardView: View {
-    @ObservedObject var viewModel: DockLockViewModel
+    @ObservedObject var viewModel: BigDockLockerViewModel
     
     var body: some View {
         VStack(spacing: 24) {
@@ -32,7 +32,7 @@ struct DashboardView: View {
             }
             
             VStack(alignment: .leading, spacing: 4) {
-                Text("DockLock")
+                Text("Big DockLocker")
                     .font(.system(size: 22, weight: .bold, design: .rounded))
                     .foregroundColor(Theme.ink)
                 Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.1.0") Signature Edition")
@@ -52,7 +52,7 @@ struct DashboardView: View {
                 Text("Accessibility Required")
                     .font(.headline)
             }
-            Text("DockLock needs permission to prevent the Dock from jumping between displays.")
+            Text("Big DockLocker needs permission to prevent the Dock from jumping between displays.")
                 .font(.subheadline)
                 .fixedSize(horizontal: false, vertical: true)
             
