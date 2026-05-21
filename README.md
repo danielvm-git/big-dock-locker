@@ -129,13 +129,24 @@ swift test
 
 ## 🤝 Contributing
 
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **Augustly appreciated**.
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'feat: Add some AmazingFeature'`) - *Note: This project uses Conventional Commits.*
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+### Automated Releases & Commit Messages
+This project uses **Semantic Release** to automate versioning and changelog generation. Because of this, **your commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/)**.
+
+The type of commit determines how the version number is bumped:
+- **`fix:`** triggers a **patch** release (e.g., 1.0.0 -> 1.0.1).
+- **`feat:`** triggers a **minor** release (e.g., 1.0.0 -> 1.1.0).
+- **`BREAKING CHANGE:`** (in the footer) triggers a **major** release (e.g., 1.0.0 -> 2.0.0).
+
+---
+
+### Step-by-Step Guide
+1. **Fork** the Project.
+2. **Create** your Feature Branch (`git checkout -b feat/AmazingFeature`).
+3. **Commit** your Changes using a conventional message (e.g., `git commit -m 'feat: Add some AmazingFeature'`).
+4. **Push** to the Branch (`git push origin feat/AmazingFeature`).
+5. **Open** a Pull Request.
 
 ---
 
