@@ -35,7 +35,7 @@ struct DashboardView: View {
                 Text("DockLock")
                     .font(.system(size: 22, weight: .bold, design: .rounded))
                     .foregroundColor(Theme.ink)
-                Text("v1.1 Signature Edition")
+                Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.1.0") Signature Edition")
                     .font(.system(size: 11, weight: .medium, design: .monospaced))
                     .foregroundColor(Theme.muted)
             }
