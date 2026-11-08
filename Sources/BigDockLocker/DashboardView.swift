@@ -27,7 +27,7 @@ struct DashboardView: View {
             if let nsImage = NSImage(named: "AppIcon") {
                 Image(nsImage: nsImage)
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .scaledToFit()
                     .frame(width: 44, height: 44)
             }
 
