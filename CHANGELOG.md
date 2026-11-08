@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/danielvm-git/big-dock-locker/compare/v1.5.1...v1.6.0) (2026-11-08)
+
+
+### Features
+
+* **observability:** add a flight recorder that survives multi-week uptime ([b463dd5](https://github.com/danielvm-git/big-dock-locker/commit/b463dd5bbc451db8755ed0f832685a0cbd21f040))
+
 ## [1.5.1](https://github.com/danielvm-git/big-dock-locker/compare/v1.5.0...v1.5.1) (2026-08-03)
 
 
