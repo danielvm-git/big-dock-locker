@@ -20,7 +20,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Hide dock icon if we want it to be a pure menu bar app
         NSApp.setActivationPolicy(.accessory)
 
+        DockLog.beginSession(appVersion: Bundle.main.shortVersion ?? "dev")
+
         menuBarController = MenuBarController()
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        DockLog.endSession()
     }
 }
 

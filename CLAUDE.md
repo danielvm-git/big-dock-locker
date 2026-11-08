@@ -12,7 +12,41 @@ Stack: Swift / SwiftUI / macOS native
 | Run    | `swift run` |
 | Test   | `swift test` |
 | Build  | `swift build` |
-| Lint   | `swiftlint` |
+| Lint   | `swiftlint --strict` |
+| Health check | `bash scripts/health-check.sh` |
+| Diagnostics bundle | `bash scripts/collect-diagnostics.sh` |
+
+## Observability
+This app is a flight recorder (see `specs/PLAN-flight-recorder.md`). Three destinations:
+
+1. **Unified log** — subsystem `com.danielvm.BigDockLocker`.
+2. **`~/Library/Logs/BigDockLocker/events-YYYY-MM-DD.log`** — rare, structured incidents
+   (`TAP_DISABLED`, `TAP_REENABLE`, `SLEEP`, `WAKE`, `LOCK`, `GAP`, `DOCK_WRONG_DISPLAY`).
+3. **`~/Library/Logs/BigDockLocker/heartbeat-YYYY-MM.log`** — one pipe-delimited line per
+   minute (16 columns, ~140 KB/month). Retention is 30 days **by age**; never by size.
+
+| What | Command |
+|------|---------|
+| Health check (read-only, idempotent) | `bash scripts/health-check.sh` |
+| Paste-ready bundle after a failure | `bash scripts/collect-diagnostics.sh` |
+| Tail incidents | `tail -f ~/Library/Logs/BigDockLocker/events-$(date +%Y-%m-%d).log` |
+| Unified log, live | `log stream --predicate 'subsystem == "com.danielvm.BigDockLocker"' --info` |
+| Unified log, last 6h | `log show --last 6h --predicate 'subsystem == "com.danielvm.BigDockLocker"' --info` |
+| Why protection died | `grep -E 'TAP_DISABLED|TAP_REENABLE|GAP|DOCK_WRONG' ~/Library/Logs/BigDockLocker/events-*.log` |
+
+`DockLog` (Sources/BigDockLocker/DockLog.swift) is the only logging entry point. Never log
+in the per-event hot path — a slow tap callback is itself what makes macOS kill the tap.
+The heartbeat carries `cbmax_us` for exactly that: it is the kill predictor.
+
+## CI
+`.github/workflows/test-build-release.yml` is the gate: `lint -> test -> build (arm64 +
+x86_64) -> release`. The release job runs `semantic-release` only on `push` to `main`
+and only after all prior jobs pass. Never publish from a separate workflow.
+Before pushing a workflow change, run locally:
+
+```bash
+swiftlint --strict && swift build && swift test && actionlint .github/workflows/*.yml
+```
 
 ## Architecture
 Background monitoring agent using macOS Accessibility and CoreGraphics APIs to lock the Dock, coupled with a SwiftUI Dashboard for configuration and status.
