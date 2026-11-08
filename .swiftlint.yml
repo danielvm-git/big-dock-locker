@@ -1,0 +1,7 @@
+# SwiftLint configuration — explicit so local and CI runs agree.
+# Everything else is SwiftLint's defaults; `swiftlint --strict` is the gate.
+
+excluded:
+  - .build
+  - .swiftpm
+  - DerivedData

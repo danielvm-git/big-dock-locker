@@ -1,0 +1,104 @@
+name: Test Build Release
+
+# Single needs-chain: lint -> test -> build -> release.
+# Nothing is released unless lint, tests and both release architectures pass.
+# Do not rename this workflow: release.yml used to exist, and the release job
+# below is the only path to a published version.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pipeline-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint (swiftlint --strict)
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install SwiftLint
+        run: |
+          brew install swiftlint
+          swiftlint version
+
+      - name: Lint
+        run: swiftlint --strict --reporter github-actions-logging
+
+  test:
+    name: Test (swift test)
+    needs: [lint]
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: swift --version
+
+      - name: Build (debug)
+        run: swift build
+
+      - name: Test
+        run: swift test
+
+  build:
+    name: Release build (${{ matrix.arch }})
+    needs: [test]
+    runs-on: macos-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [arm64, x86_64]
+    steps:
+      - uses: actions/checkout@v4
+
+      # Both architectures are shipped as DMGs by the release job, so both must
+      # compile before anything is published.
+      - name: Build (release)
+        run: swift build -c release --arch ${{ matrix.arch }}
+
+      - name: Verify binary
+        run: |
+          BINARY=$(find .build/${{ matrix.arch }}-apple-macosx/release -maxdepth 1 -name BigDockLocker -type f)
+          test -x "$BINARY" || { echo "::error::no release binary for ${{ matrix.arch }}"; exit 1; }
+          file "$BINARY"
+
+  release:
+    name: Release (semantic-release)
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: [build]
+    runs-on: macos-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
