@@ -18,6 +18,13 @@ concurrency:
   group: pipeline-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # Pinned deliberately: an unpinned `brew install swiftlint` gave CI a newer
+  # SwiftLint than the one developers run, and a brand-new rule then blocked a
+  # release over pre-existing code. Bump this only together with a green run.
+  # The .pkg is a universal (x86_64 + arm64) binary.
+  SWIFTLINT_VERSION: "0.63.2"
+
 jobs:
   lint:
     name: Lint (swiftlint --strict)
@@ -26,10 +33,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install SwiftLint
+      - name: Install SwiftLint ${{ env.SWIFTLINT_VERSION }}
         run: |
-          brew install swiftlint
-          swiftlint version
+          curl -fsSL -o /tmp/SwiftLint.pkg \
+            "https://github.com/realm/SwiftLint/releases/download/${SWIFTLINT_VERSION}/SwiftLint.pkg"
+          sudo installer -pkg /tmp/SwiftLint.pkg -target /
+          test "$(swiftlint version)" = "${SWIFTLINT_VERSION}" || {
+            echo "::error::SwiftLint version drift: expected ${SWIFTLINT_VERSION}, got $(swiftlint version)"
+            exit 1
+          }
 
       - name: Lint
         run: swiftlint --strict --reporter github-actions-logging

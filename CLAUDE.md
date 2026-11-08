@@ -42,6 +42,10 @@ The heartbeat carries `cbmax_us` for exactly that: it is the kill predictor.
 `.github/workflows/test-build-release.yml` is the gate: `lint -> test -> build (arm64 +
 x86_64) -> release`. The release job runs `semantic-release` only on `push` to `main`
 and only after all prior jobs pass. Never publish from a separate workflow.
+SwiftLint is pinned to `0.63.2` in the workflow's `env`. Do not swap it for an
+unpinned `brew install`: that is how a newly released rule blocks a release over
+code nobody touched.
+
 Before pushing a workflow change, run locally:
 
 ```bash
