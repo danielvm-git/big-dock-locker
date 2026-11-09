@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/danielvm-git/big-dock-locker/compare/v1.6.0...v1.6.1) (2026-11-09)
+
+
+### Bug Fixes
+
+* **signing:** pin the designated requirement so TCC grants survive updates ([4622498](https://github.com/danielvm-git/big-dock-locker/commit/46224980d8db7edf8c29e937d9a206be0fb216f0))
+
 # [1.6.0](https://github.com/danielvm-git/big-dock-locker/compare/v1.5.1...v1.6.0) (2026-11-08)
 
 
