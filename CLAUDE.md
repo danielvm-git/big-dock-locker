@@ -38,6 +38,15 @@ This app is a flight recorder (see `specs/PLAN-flight-recorder.md`). Three desti
 in the per-event hot path — a slow tap callback is itself what makes macOS kill the tap.
 The heartbeat carries `cbmax_us` for exactly that: it is the kill predictor.
 
+## Signing
+The app is ad-hoc signed, but the **designated requirement is pinned** to
+`identifier "com.danielvm.BigDockLocker"` in `scripts/build-app.sh` and `run.sh`.
+Never sign with a bare `codesign -s -`: that embeds `cdhash H"…"` as the
+requirement, and macOS keys Accessibility grants to it, so every new build
+silently invalidates the user's permission (visible in the log as
+`Failed to match existing code requirement` and a dashboard that says
+"Accessibility Required" while System Settings shows the toggle ON).
+
 ## CI
 `.github/workflows/test-build-release.yml` is the gate: `lint -> test -> build (arm64 +
 x86_64) -> release`. The release job runs `semantic-release` only on `push` to `main`

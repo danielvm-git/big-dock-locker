@@ -9,6 +9,7 @@ DerivedData/
 node_modules/
 BigDockLocker.zip
 BigDockLocker.app/
+BigDockLocker-*.app/
 package-lock.json
 *.dmg
 \n.claude/
